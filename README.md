@@ -15,9 +15,9 @@ For creating torrent, [src/main/java/lib/jlibtorrent-windows-1.2.8.0.jar](https:
 
 For getting mediainfo, [RepoUpYours/src/main/java/lib/mtn-win32/bin/mtn.exe](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/lib/mtn-win32/bin/mtn.exe)  needs to be linked in src/main/java/GUI/GetMediainfo.java [line 11](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/GetMediainfo.java#L11).
 
-For sending the thumbnail to [imgbb](https://imgbb.com/), an imgbb account is needed and an API token can be entered in the Settings in the application.
+For sending the thumbnail to [imgbb](https://imgbb.com/), an imgbb account and API token is needed. The API token can be entered in Settings in the application.
 
-For classes [src/main/java/GUI/SendToIMGBB.java](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/SendToIMGBB.java) and [src/main/java/GUI/SendToSite.java](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/SendToSite.java) [Unirest](http://kong.github.io/unirest-java/) is needed.
+For classes [src/main/java/GUI/SendToIMGBB.java](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/SendToIMGBB.java) and [src/main/java/GUI/SendToSite.java](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/SendToSite.java), [Unirest](http://kong.github.io/unirest-java/) is needed.
 
 You can test the GUI when specifying a folder (in the Settings) that contains a video file.
 
