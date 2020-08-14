@@ -7,7 +7,7 @@ Program with a GUI which uses a SQLite database to store information about shows
 - Uploads the thumbnail to imgbb and gets a link to the image.
 - Uploads the torrent along with all the information and thumbnail to a hosting site.
 
-For using the database, [src/main/java/lib/sqlite-jdbc-3.30.1.jar Database](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/lib/sqlite-jdbc-3.30.1.jar) needs to be added as a dependency. The database file is [src/main/java/RepoUpYours.db](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/upyours.db) . Database needs to be linked in src/main/java/GUI/App.java [line 460](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/App.java#L460). 
+For using the database, [src/main/java/lib/sqlite-jdbc-3.30.1.jar](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/lib/sqlite-jdbc-3.30.1.jar) needs to be added as a dependency. The database file is [src/main/java/RepoUpYours.db](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/upyours.db) . Database needs to be linked in src/main/java/GUI/App.java [line 460](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/App.java#L460). 
 
 For thumbnail creation, [src/main/java/lib/mtn-win32/bin/mtn.exe](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/lib/mtn-win32/bin/mtn.exe) needs to be linked in src/main/java/GUI/CreateThumbnail.java [line 15](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/CreateThumbnail.java#L15) (several places). mtn.exe is used with Java Runtime/Process.
 
