@@ -19,7 +19,7 @@ For sending the thumbnail to [imgbb](https://imgbb.com/), an imgbb account and A
 
 For classes [src/main/java/GUI/SendToIMGBB.java](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/SendToIMGBB.java) and [src/main/java/GUI/SendToSite.java](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/SendToSite.java), [Unirest](http://kong.github.io/unirest-java/) is needed.
 
-You can test the GUI when specifying a folder (in the Settings) that contains a video file.
+The GUI can be opened with [src/main/java/GUI/App.java](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/App.java). You can test the GUI when specifying a folder (in the Settings) that contains a video file.
 
 This application wasn't intended to be developed in GitHub. I used IntelliJ IDEA Ultimate and uploaded everything to here. THe GUI was designed with IntelliJ Swing UI Designer.
 
