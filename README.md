@@ -11,7 +11,7 @@ For using the database, [src/main/java/lib/sqlite-jdbc-3.30.1.jar](https://githu
 
 For thumbnail creation, [src/main/java/lib/mtn-win32/bin/mtn.exe](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/lib/mtn-win32/bin/mtn.exe) needs to be linked in src/main/java/GUI/CreateThumbnail.java [line 15](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/CreateThumbnail.java#L15) (two places on the same line). mtn.exe is used with Java Runtime/Process.
 
-For creating torrent, [src/main/java/lib/jlibtorrent-windows-1.2.8.0.jar](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/lib/jlibtorrent-windows-1.2.8.0.jar) and [RepoUpYours/src/main/java/lib/jlibtorrent-1.2.8.0.dll](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/lib/jlibtorrent-1.2.8.0.dll) needs to be added as dependencies.
+For creating torrent, [src/main/java/lib/jlibtorrent-windows-1.2.8.0.jar](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/lib/jlibtorrent-windows-1.2.8.0.jar) and [src/main/java/lib/jlibtorrent-1.2.8.0.dll](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/lib/jlibtorrent-1.2.8.0.dll) needs to be added as dependencies.
 
 For getting mediainfo, [src/main/java/lib/MediaInfo.exe](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/lib/MediaInfo.exe)  needs to be linked in src/main/java/GUI/GetMediainfo.java [line 11](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/GetMediainfo.java#L11). MediaInfo is used with Java Runtime/Process.
 
