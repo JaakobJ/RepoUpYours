@@ -23,8 +23,11 @@ public class AddTitle {
     private DefaultTableModel tableModel;
 
     public AddTitle(final DataHelper show, final Statement statement) throws SQLException {
-        this.addTitleTextField.setText(show.getFileName());
-        this.addExtensionTextField.setText(show.getExtension());
+        addTitleTextField.setText(show.getFileName());
+        addExtensionTextField.setText(show.getExtension());
+
+        addTitleTextField.setCaretPosition(0);
+        addExtensionTextField.setCaretPosition(0);
 
         String[][] data = {};
         String[] columnNames = {"Show name", "Extension"};
@@ -47,6 +50,8 @@ public class AddTitle {
                 if (titleJTable.getSelectedRow() != -1) {
                     addTitleTextField.setText(titleJTable.getValueAt(titleJTable.getSelectedRow(), 0).toString());
                     addExtensionTextField.setText(titleJTable.getValueAt(titleJTable.getSelectedRow(), 1).toString());
+                    addTitleTextField.setCaretPosition(0);
+                    addExtensionTextField.setCaretPosition(0);
                 }
             }
         });
@@ -57,10 +62,10 @@ public class AddTitle {
                 if (addTitleTextField.getText().trim().length() > 0 && addExtensionTextField.getText().trim().length() > 0) {
                     try {
                         statement.executeUpdate("INSERT INTO shows (showname) VALUES('" +
-                                addTitleTextField.getText().replaceAll("'", "''") + "." + addExtensionTextField.getText() + "');");
+                                addTitleTextField.getText().replaceAll("'", "''") + "." + addExtensionTextField.getText().replaceAll("'", "''") + "');");
 
                         int anonymous = show.isAnonymous() ? 1 : 0;
-                        int stream = show.isSteamOptimized() ? 1 : 0;
+                        int stream = show.isStreamOptimized() ? 1 : 0;
                         int sd = show.isSdContent() ? 1 : 0;
                         statement.executeUpdate("UPDATE shows SET description=" + "'" + show.getDescription().replaceAll("'", "''") + "',"
                                 + "category_id=" + "'" + show.getCategory() + "',"
@@ -75,8 +80,8 @@ public class AddTitle {
                                 + "sd=" + sd + ","
                                 + "name=" + "'" + show.getTitle().replaceAll("'", "''") + "'"
 
-                                + "WHERE showname=" + "'" + addTitleTextField.getText() + "."
-                                + addExtensionTextField.getText() + "';");
+                                + "WHERE showname=" + "'" + addTitleTextField.getText().replaceAll("'", "''") + "."
+                                + addExtensionTextField.getText().replaceAll("'", "''") + "';");
 
                         UpdateTable(statement);
                     } catch (SQLException throwables) {
@@ -94,7 +99,7 @@ public class AddTitle {
                 if (addTitleTextField.getText().trim().length() > 0 && addExtensionTextField.getText().trim().length() > 0) {
                     try {
                         statement.executeUpdate("DELETE FROM shows WHERE showname=="
-                                + "'" + addTitleTextField.getText().replaceAll("'", "''") + "." + addExtensionTextField.getText() + "';");
+                                + "'" + addTitleTextField.getText().replaceAll("'", "''") + "." + addExtensionTextField.getText().replaceAll("'", "''") + "';");
                         UpdateTable(statement);
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
@@ -112,8 +117,8 @@ public class AddTitle {
                     if (titleJTable.getSelectedRow() != -1) {
                         try {
                             statement.executeUpdate("INSERT INTO shows (showname, description, category_id, type_id, resolution_id, tmdb, imdb, tvdb, mal, igdb, anonymous, stream, sd, internal, thumbnail, screenshots, name) "
-                                    + "SELECT '" + addTitleTextField.getText().replaceAll("'", "''") + "." + addExtensionTextField.getText() + "', description, category_id, type_id, resolution_id, tmdb, imdb, tvdb, mal, igdb, anonymous, stream, sd, internal, thumbnail, screenshots, name "
-                                    + "FROM shows WHERE showname='" + titleJTable.getValueAt(titleJTable.getSelectedRow(), 0).toString().replaceAll("'", "''") + "." + titleJTable.getValueAt(titleJTable.getSelectedRow(), 1).toString() + "';");
+                                    + "SELECT '" + addTitleTextField.getText().replaceAll("'", "''") + "." + addExtensionTextField.getText().replaceAll("'", "''") + "', description, category_id, type_id, resolution_id, tmdb, imdb, tvdb, mal, igdb, anonymous, stream, sd, internal, thumbnail, screenshots, name "
+                                    + "FROM shows WHERE showname='" + titleJTable.getValueAt(titleJTable.getSelectedRow(), 0).toString().replaceAll("'", "''") + "." + titleJTable.getValueAt(titleJTable.getSelectedRow(), 1).toString().replaceAll("'", "''") + "';");
                             UpdateTable(statement);
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();

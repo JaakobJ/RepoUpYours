@@ -46,9 +46,26 @@ public class SendToSite {
         StringBuilder messageToReturn = new StringBuilder();
 
         String builtTitle = show.getTitle().replaceAll("\\$FILENAME", show.getFileName());
-
         String builtDescription = show.getDescription().replaceAll("\n", "<br>");
+
         builtDescription = builtDescription.replaceAll("\\$FILENAME", show.getFileName());
+
+        // Matches first 20200815 ; 200815 ; 2020-08-15 ; 2020.08.15
+        Pattern pattern1 = Pattern.compile("((\\d){8}|(\\d{6})|(\\d{4}-\\d{2}-\\d{2})|(\\d{4}\\.\\d{2}\\.\\d{2}))");
+        Matcher matcher1 = pattern1.matcher(show.getFileName());
+        if (matcher1.find()) {
+            builtTitle.replaceAll("\\$DATE", matcher1.group());
+            builtDescription.replaceAll("\\$DATE", matcher1.group());
+        }
+
+        // Matches first S01E01 ; EP01 ; Ep01 ; E01 (there can be however many numbers you want)
+        Pattern pattern2 = Pattern.compile("((S\\d+E\\d+)|(E[Pp]\\d+)|(E\\d+))");
+        Matcher matcher2 = pattern2.matcher(show.getFileName());
+        if (matcher2.find()) {
+            builtTitle.replaceAll("\\$EP", matcher2.group());
+            builtDescription.replaceAll("\\$EP", matcher2.group());
+        }
+
 
         if (!show.getThumbnailLink().isEmpty()) {
             builtDescription = builtDescription + "<br><br>[img]" + show.getThumbnailLink() + "[/img]";
@@ -70,7 +87,7 @@ public class SendToSite {
                 .field("mal", show.getMalID())
                 .field("igdb", "0")
                 .field("anonymous", show.isAnonymous() ? "1" : "0")
-                .field("stream", show.isSteamOptimized() ? "1" : "0")
+                .field("stream", show.isStreamOptimized() ? "1" : "0")
                 .field("sd", show.isSdContent() ? "1" : "0")
                 .field("internal", show.isInternal() ? "1" : "0")
                 .asString();

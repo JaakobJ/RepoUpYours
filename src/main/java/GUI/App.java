@@ -38,17 +38,19 @@ public class App {
     private JComboBox<String> typeComboBox;
     private JScrollPane descriptionScrollPane;
     private JTextArea descriptionTextArea;
-    private JRadioButton yesRadioButton;
-    private JRadioButton noRadioButton;
-    private JRadioButton yesRadioButton1;
-    private JRadioButton noRadioButton1;
-    private JRadioButton yesRadioButton2;
-    private JRadioButton noRadioButton2;
+    private JRadioButton anonymousYesRadioButton;
+    private JRadioButton anonymousNoRadioButton;
+    private JRadioButton streamYesRadioButton;
+    private JRadioButton streamNoRadioButton;
+    private JRadioButton sdYesRadioButton;
+    private JRadioButton sdNoRadioButton;
     private JButton saveButton;
     private JButton addTitleButton;
     private JButton updateButton;
     private JProgressBar progressBar;
     private JButton logButton;
+    private JRadioButton internalYesRadioButton;
+    private JRadioButton internalNoRadioButton;
 
     private DefaultTableModel tableModel;
 
@@ -61,6 +63,7 @@ public class App {
     private ButtonGroup anonymousGroup = new ButtonGroup();
     private ButtonGroup streamOptimizedGroup = new ButtonGroup();
     private ButtonGroup sdContentGroup = new ButtonGroup();
+    private ButtonGroup internalGroup = new ButtonGroup();
 
     private Connection connection = null;
     private Statement statement = null;
@@ -78,12 +81,14 @@ public class App {
     public App() throws SQLException {
         messageBoxMessage = new StringBuilder();
 
-        anonymousGroup.add(yesRadioButton);
-        anonymousGroup.add(noRadioButton);
-        streamOptimizedGroup.add(yesRadioButton1);
-        streamOptimizedGroup.add(noRadioButton1);
-        sdContentGroup.add(yesRadioButton2);
-        sdContentGroup.add(noRadioButton2);
+        anonymousGroup.add(anonymousYesRadioButton);
+        anonymousGroup.add(anonymousNoRadioButton);
+        streamOptimizedGroup.add(streamYesRadioButton);
+        streamOptimizedGroup.add(streamNoRadioButton);
+        sdContentGroup.add(sdYesRadioButton);
+        sdContentGroup.add(sdNoRadioButton);
+        internalGroup.add(internalYesRadioButton);
+        internalGroup.add(internalNoRadioButton);
 
         createDBConnection();
 
@@ -362,7 +367,7 @@ public class App {
         show.setTvdbID(rs.getString("tvdb"));
         show.setMalID(rs.getString("mal"));
         show.setAnonymous(rs.getString("anonymous").equals("1"));
-        show.setSteamOptimized(rs.getString("stream").equals("1"));
+        show.setStreamOptimized(rs.getString("stream").equals("1"));
         show.setSdContent(rs.getString("sd").equals("1"));
         show.setInternal(rs.getString("internal").equals("1"));
         show.setThumbnail(rs.getString("thumbnail").equals("1"));
@@ -381,14 +386,20 @@ public class App {
         malTextField.setText(show.getMalID());
         descriptionTextArea.setText(show.getDescription());
         anonymousGroup.clearSelection();
-        yesRadioButton.setSelected(show.isAnonymous());
-        noRadioButton.setSelected(!show.isAnonymous());
+        anonymousYesRadioButton.setSelected(show.isAnonymous());
+        anonymousNoRadioButton.setSelected(!show.isAnonymous());
         streamOptimizedGroup.clearSelection();
-        yesRadioButton1.setSelected(show.isSteamOptimized());
-        noRadioButton1.setSelected(!show.isSteamOptimized());
+        streamYesRadioButton.setSelected(show.isStreamOptimized());
+        streamNoRadioButton.setSelected(!show.isStreamOptimized());
         sdContentGroup.clearSelection();
-        yesRadioButton2.setSelected(show.isSdContent());
-        noRadioButton2.setSelected(!show.isSdContent());
+        sdYesRadioButton.setSelected(show.isSdContent());
+        sdNoRadioButton.setSelected(!show.isSdContent());
+        internalGroup.clearSelection();
+        internalYesRadioButton.setSelected(show.isInternal());
+        internalNoRadioButton.setSelected(!show.isInternal());
+
+        titleTextField.setCaretPosition(0);
+        descriptionTextArea.setCaretPosition(0);
     }
 
     private void UpdateShow(DataHelper show) throws SQLException {
@@ -408,9 +419,10 @@ public class App {
         show.setTvdbID(tvdbTextField.getText());
         show.setMalID(malTextField.getText());
         show.setDescription(descriptionTextArea.getText());
-        show.setAnonymous(yesRadioButton.isSelected());
-        show.setSteamOptimized(yesRadioButton1.isSelected());
-        show.setSdContent(yesRadioButton2.isSelected());
+        show.setAnonymous(anonymousYesRadioButton.isSelected());
+        show.setStreamOptimized(streamYesRadioButton.isSelected());
+        show.setSdContent(sdYesRadioButton.isSelected());
+        show.setInternal(internalYesRadioButton.isSelected());
 
         try { Integer.parseInt(tmdbTextField.getText()); } catch (NumberFormatException e) {
             show.setTmdbID("0");
@@ -428,7 +440,7 @@ public class App {
 
     private void UpdateDBShow(DataHelper show) throws SQLException {
         int anonymous = show.isAnonymous() ? 1 : 0;
-        int stream = show.isSteamOptimized() ? 1 : 0;
+        int stream = show.isStreamOptimized() ? 1 : 0;
         int sd = show.isSdContent() ? 1 : 0;
 
         statement.executeUpdate("UPDATE shows SET description=" + "'" + descriptionTextArea.getText().replaceAll("'", "''") + "',"

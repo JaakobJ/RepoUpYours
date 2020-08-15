@@ -60,10 +60,10 @@ public class Settings {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    statement.executeUpdate("UPDATE settings SET path=" + "'" + uploadPathTextField.getText() + "',"
-                            + "user_id=" + "'" + userIDtextField.getText() + "',"
-                            + "api_token=" + "'" + apiTokenTextField.getText() + "',"
-                            + "imgbb_api_token=" + "'" + imgbbApiTokenTextField.getText() + "'"
+                    statement.executeUpdate("UPDATE settings SET path=" + "'" + uploadPathTextField.getText().replaceAll("'", "''") + "',"
+                            + "user_id=" + "'" + userIDtextField.getText().replaceAll("'", "''") + "',"
+                            + "api_token=" + "'" + apiTokenTextField.getText().replaceAll("'", "''") + "',"
+                            + "imgbb_api_token=" + "'" + imgbbApiTokenTextField.getText().replaceAll("'", "''") + "'"
                             + "WHERE id=0");
                     frame.dispose();
                 } catch (SQLException throwables) {

@@ -17,7 +17,7 @@ public class DataHelper {
     private String malID;
     private String description;
     private boolean anonymous;
-    private boolean steamOptimized;
+    private boolean streamOptimized;
     private boolean sdContent;
     private String absolutePath;
 
@@ -47,7 +47,7 @@ public class DataHelper {
         this.malID = "0";
         this.description = "";
         this.anonymous = false;
-        this.steamOptimized = false;
+        this.streamOptimized = false;
         this.sdContent = false;
 
         this.absolutePath = absolutePath;
@@ -64,7 +64,7 @@ public class DataHelper {
 
     public DataHelper(String fileName, String shortName, String extension, String title, String category, String type,
                       String resolution, String tmdbID, String imdbID, String tvdbID, String malID, String description,
-                      boolean anonymous, boolean steamOptimized, boolean sdContent, String absolutePath,
+                      boolean anonymous, boolean streamOptimized, boolean sdContent, String absolutePath,
                       boolean internal, boolean thumbnail, int screenshots) {
         this.fileName = fileName;
         this.shortName = shortName;
@@ -79,7 +79,7 @@ public class DataHelper {
         this.malID = malID;
         this.description = description;
         this.anonymous = anonymous;
-        this.steamOptimized = steamOptimized;
+        this.streamOptimized = streamOptimized;
         this.sdContent = sdContent;
 
         this.absolutePath = absolutePath;
@@ -193,12 +193,12 @@ public class DataHelper {
         this.anonymous = anonymous;
     }
 
-    public boolean isSteamOptimized() {
-        return steamOptimized;
+    public boolean isStreamOptimized() {
+        return streamOptimized;
     }
 
-    public void setSteamOptimized(boolean steamOptimized) {
-        this.steamOptimized = steamOptimized;
+    public void setStreamOptimized(boolean streamOptimized) {
+        this.streamOptimized = streamOptimized;
     }
 
     public boolean isSdContent() {
