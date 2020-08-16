@@ -40,8 +40,8 @@ Currently allowed files are mp4, mkv, ts, avi, flv, divx, m2ts, mov, mpg, mpeg, 
 
 #### Add Series
 There are three different ways to add a series:
-1. Click on Add Series button, choose the name all the shows in that series have in common and press Add.
-2. First enter all the information about the series on the right side of the interface and then click on the Add Series button, choose the name all the shows in that series have in common and press Add.
+1. Click on Add Series button, choose the name all the files in that series have in common and press Add.
+2. First enter all the information about the series on the right side of the interface and then click on the Add Series button, choose the name all the files in that series have in common and press Add.
 3. Press Add Series button, click on the series you wish to copy, change the name and/or extension and press Copy/Add. Now the new series has the same information.
 
 After pressing Reload, you can see the Series Name column to fill up if it matches a file name and extension.
