@@ -49,7 +49,7 @@ After pressing Reload, you can see the Series Name column to fill up if it match
 #### Entering information about a show
 The program has two types of memory: application and database memory. All the information you enter about a file is stored in the application memory. This means that you don't actually have to add a series if you don't want to. The application memory is deleted when you press Reload or close the program. Only when you press Save, the information is stored to database (provided you have previously added the series).
 
-The reason behind this is so you could upload multiple files from the same series: For example three files can have the same series name but different title and description. Also, this makes it possible to upload a file without adding a series at all: For example if it is a one-off show.
+The reason behind this is so you could upload multiple files from the same series at the same time: For example three files can have the same series name but different title and description. Also, this makes it possible to upload a file without adding a series at all: For example if it is a one-off show.
 
 #### Tips
 There are some useful $ words which you can use in the title and description:
