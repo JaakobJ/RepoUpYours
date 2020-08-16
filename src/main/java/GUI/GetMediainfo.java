@@ -13,7 +13,7 @@ public class GetMediainfo {
         }
 
         Runtime rt = Runtime.getRuntime();
-        Process pr = rt.exec("\"C:\\Users\\Kasutaja\\Downloads\\SQLite\\MediaInfo.exe\" \"" + videoFilePath + "\"");
+        Process pr = rt.exec("\""+ System.getProperty("user.dir") + "\\lib\\MediaInfo.exe\" \"" + videoFilePath + "\"");
 
         BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
         StringBuilder mediainfo = new StringBuilder();

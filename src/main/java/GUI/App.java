@@ -291,7 +291,9 @@ public class App {
 
                         try {
                             ResultSet rs = statement.executeQuery("select * from settings where id=0");
-                            messageBoxMessage.append(sendToSite.send(show, rs.getString("user_id"), rs.getString("api_token")));
+
+                            // Sending the torrent, all the info and thumbnail to "a site" is disabled
+                            //messageBoxMessage.append(sendToSite.send(show, rs.getString("user_id"), rs.getString("api_token")));
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();
                             StringWriter sw = new StringWriter();
@@ -474,7 +476,7 @@ public class App {
     private void createDBConnection() {
         try {
             // create a database connection
-            connection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\Kasutaja\\Downloads\\SQLite\\upyours.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:database.db");
             statement = connection.createStatement();
             statement.setQueryTimeout(5);
         } catch (SQLException e) {

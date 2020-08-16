@@ -29,6 +29,7 @@ public class test2 {
         matcher2.find();
         System.out.println(matcher2.group());
 
+        System.out.println("Working Directory = " + System.getProperty("user.dir"));
 
 
     }

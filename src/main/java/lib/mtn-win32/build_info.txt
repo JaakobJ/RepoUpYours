@@ -1,5 +1,0 @@
-CI_PROJECT_PATH:    movie_thumbnailer/mtn
-CI_COMMIT_REF_NAME: master
-CI_COMMIT_SHA:      20d45688ac46fb788a65bf3c3e5f66a48d21c74f
-CI_PIPELINE_ID:     85491223
-CI_JOB_ID:          307832774
