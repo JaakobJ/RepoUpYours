@@ -38,7 +38,7 @@ This application wasn't intended to be developed in GitHub. I used IntelliJ IDEA
 #### What files are allowed?
 Currently allowed files are mp4, mkv, ts, avi, flv, divx, m2ts, mov, mpg, mpeg, wmv, xvid and folders that contain at least one of the beforementioned files. In the application, the extension for a folder is folder.
 
-#### Adding Series
+#### Add Series
 There are three ways to add a series:
 1. Click on Add Series button, choose the name all the shows in that series have in common and press Add.
 2. First enter all the information about the series on the right side of the interface and then click on the Add Series button, choose the name all the shows in that series have in common and press Add.
