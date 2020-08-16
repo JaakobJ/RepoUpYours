@@ -256,8 +256,9 @@ public class App {
                         messageBoxMessage.append(sw.toString());
                     }
                     try {
+                        messageBoxMessage.append("Creating mediainfo for file " + show.getFileName() + "." + show.getExtension() + "\n");
                         getMediainfo.addMediainfoToDataHelper(show);
-                        messageBoxMessage.append("Got mediainfo for file " + show.getFileName() + "." + show.getExtension() + "\n");
+                        messageBoxMessage.append("Mediainfo created for file " + show.getFileName() + "." + show.getExtension() + "\n");
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                         StringWriter sw = new StringWriter();
@@ -276,7 +277,7 @@ public class App {
 
                     try {
                         ResultSet rs = statement.executeQuery("select * from settings where id=0");
-                        messageBoxMessage.append(sendToIMGBB.send(show, rs.getString("imgbb_api_token")));
+                        //messageBoxMessage.append(sendToIMGBB.send(show, rs.getString("imgbb_api_token")));
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                         StringWriter sw = new StringWriter();

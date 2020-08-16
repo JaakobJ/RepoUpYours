@@ -7,8 +7,13 @@ import java.io.InputStreamReader;
 public class GetMediainfo {
 
     public void addMediainfoToDataHelper(DataHelper show) throws IOException {
+        String videoFilePath = show.getAbsolutePath();
+        if (show.isFolder()) {
+            videoFilePath = show.getInsideFolderVideoFile().getAbsolutePath();
+        }
+
         Runtime rt = Runtime.getRuntime();
-        Process pr = rt.exec("\"C:\\Users\\Kasutaja\\Downloads\\SQLite\\MediaInfo.exe\" \"" + show.getAbsolutePath() + "\"");
+        Process pr = rt.exec("\"C:\\Users\\Kasutaja\\Downloads\\SQLite\\MediaInfo.exe\" \"" + videoFilePath + "\"");
 
         BufferedReader input = new BufferedReader(new InputStreamReader(pr.getInputStream()));
         StringBuilder mediainfo = new StringBuilder();

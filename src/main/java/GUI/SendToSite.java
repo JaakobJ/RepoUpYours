@@ -54,22 +54,25 @@ public class SendToSite {
         Pattern pattern1 = Pattern.compile("((\\d){8}|(\\d{6})|(\\d{4}-\\d{2}-\\d{2})|(\\d{4}\\.\\d{2}\\.\\d{2}))");
         Matcher matcher1 = pattern1.matcher(show.getFileName());
         if (matcher1.find()) {
-            builtTitle.replaceAll("\\$DATE", matcher1.group());
-            builtDescription.replaceAll("\\$DATE", matcher1.group());
+            builtTitle = builtTitle.replaceAll("\\$DATE", matcher1.group());
+            builtDescription = builtDescription.replaceAll("\\$DATE", matcher1.group());
         }
 
         // Matches first S01E01 ; EP01 ; Ep01 ; E01 (there can be however many numbers you want)
         Pattern pattern2 = Pattern.compile("((S\\d+E\\d+)|(E[Pp]\\d+)|(E\\d+))");
         Matcher matcher2 = pattern2.matcher(show.getFileName());
         if (matcher2.find()) {
-            builtTitle.replaceAll("\\$EP", matcher2.group());
-            builtDescription.replaceAll("\\$EP", matcher2.group());
+            builtTitle = builtTitle.replaceAll("\\$EP", matcher2.group());
+            builtDescription = builtDescription.replaceAll("\\$EP", matcher2.group());
         }
 
 
         if (!show.getThumbnailLink().isEmpty()) {
             builtDescription = builtDescription + "<br><br>[img]" + show.getThumbnailLink() + "[/img]";
         }
+
+        Unirest.config().reset();
+        Unirest.config().socketTimeout(2000).connectTimeout(5000);
 
         HttpResponse<String> response = Unirest.post("*****/api/torrents/upload?api_token=" + api_token)
                 .field("torrent", show.getTorrentFile())

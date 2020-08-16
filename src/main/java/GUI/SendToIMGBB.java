@@ -11,6 +11,9 @@ public class SendToIMGBB {
     public String send(DataHelper show, String imgbb_api) {
         StringBuilder messageToReturn = new StringBuilder();
 
+        Unirest.config().reset();
+        Unirest.config().socketTimeout(2000).connectTimeout(5000);
+
         HttpResponse<String> response = Unirest.post("https://api.imgbb.com/1/upload?key=" + imgbb_api)
                 .field("image", show.getThumbnailFile()).asString();
 

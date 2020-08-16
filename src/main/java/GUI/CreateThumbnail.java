@@ -11,10 +11,18 @@ public class CreateThumbnail {
             fontSize = "10";
         }
 
-        Runtime rt = Runtime.getRuntime();
-        Process pr = rt.exec("\"C:\\Users\\Kasutaja\\Downloads\\SQLite\\mtn-win32\\bin\\mtn.exe\" -f \"C:\\Users\\Kasutaja\\Downloads\\SQLite\\mtn-win32\\bin\\meiryo.ttc\" -F FFFFFF:" + fontSize + ":meiryo.ttc:FFFFFF:000000:13 -k 272727 -L 4:2 -c 4 -r 4 -h 140 -g 5 -P -O \"" + show.getActualThisFile().getParent() + "\" \"" + show.getAbsolutePath() + "\"");
+        String videoFilePath = show.getAbsolutePath();
+        String videoFileName = show.getFileName();
 
-        show.setThumbnailFile(new File(show.getActualThisFile().getParent() + "\\" + show.getFileName() + "_s.jpg"));
+        if (show.isFolder()) {
+            videoFilePath = show.getInsideFolderVideoFile().getAbsolutePath();
+            videoFileName = show.getInsideFolderVideoFile().getName();
+        }
+
+        Runtime rt = Runtime.getRuntime();
+        Process pr = rt.exec("\"C:\\Users\\Kasutaja\\Downloads\\SQLite\\mtn-win32\\bin\\mtn.exe\" -f \"C:\\Users\\Kasutaja\\Downloads\\SQLite\\mtn-win32\\bin\\meiryo.ttc\" -F FFFFFF:" + fontSize + ":meiryo.ttc:FFFFFF:000000:13 -k 272727 -L 4:2 -c 4 -r 4 -h 140 -g 5 -P -O \"" + show.getActualThisFile().getParent() + "\" \"" + videoFilePath + "\"");
+
+        show.setThumbnailFile(new File(show.getActualThisFile().getParent() + "\\" + videoFileName + "_s.jpg"));
     }
 
     /*public static void main(String[] args) throws IOException {

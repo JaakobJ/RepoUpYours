@@ -33,6 +33,9 @@ public class DataHelper {
 
     private String thumbnailLink;
 
+    private boolean folder;
+    private File insideFolderVideoFile;
+
     public DataHelper(String fileName, String extension, String absolutePath, File actualThisFile) {
         this.fileName = fileName;
         this.shortName = "";
@@ -60,6 +63,9 @@ public class DataHelper {
 
         this.mediainfo = "";
         this.thumbnailLink = "";
+
+        this.folder = false;
+
     }
 
     public DataHelper(String fileName, String shortName, String extension, String title, String category, String type,
@@ -87,6 +93,8 @@ public class DataHelper {
         this.internal = internal;
         this.thumbnail = thumbnail;
         this.screenshots = screenshots;
+
+        this.folder = false;
     }
 
     public String getFileName() {
@@ -279,5 +287,21 @@ public class DataHelper {
 
     public void setThumbnailLink(String thumbnailLink) {
         this.thumbnailLink = thumbnailLink;
+    }
+
+    public boolean isFolder() {
+        return folder;
+    }
+
+    public void setFolder(boolean folder) {
+        this.folder = folder;
+    }
+
+    public File getInsideFolderVideoFile() {
+        return insideFolderVideoFile;
+    }
+
+    public void setInsideFolderVideoFile(File insideFolderVideoFile) {
+        this.insideFolderVideoFile = insideFolderVideoFile;
     }
 }
