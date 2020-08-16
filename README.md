@@ -34,3 +34,25 @@ The GUI can be opened in IDE with [src/main/java/GUI/App.java](https://github.co
 
 This application wasn't intended to be developed in GitHub. I used IntelliJ IDEA Ultimate and uploaded everything to here. The GUI components were designed with IntelliJ Swing UI Designer.
 
+### Guide
+#### What files are allowed?
+Currently allowed files are mp4, mkv, ts, avi, flv, divx, m2ts, mov, mpg, mpeg, wmv, xvid and folders that contain at least one of the beforementioned files. In the application, the extension for a folder is folder.
+
+#### Adding Series
+There are three ways to add a series:
+1. Click on Add Series button, choose the name all the shows in that series have in common and press Add.
+2. First enter all the information about the series on the right side of the interface and then click on the Add Series button, choose the name all the shows in that series have in common and press Add.
+3. Press Add Series button, click on the series you wish to copy, change the name and/or extension and press Copy/Add. Now the new series has the same information.
+
+After pressing Reload, you can see the Series Name column fill up if it matches a file name and extension.
+
+#### Entering information about a show
+The program has two types of memory: application and database memory. All the information you enter about a file is stored in the application memory. This means that you don't actually have to add a series if you don't want to. The application memory is deleted when you press Reload or close the program. Only when you press Save, the information is stored in database (provided you have previously added the series).
+
+The reason behind this is so you could upload multiple files from the same series: For example three files can have the same series name but different title and description. Also, this makes it possible to upload a file without adding a series at all: For example if it is a one-off show.
+
+#### Tips
+There are some useful $ words which you can use in the title and description:
+- $FILENAME - This word is changed to the filename when sent to a site
+- $DATE - This word is changed to the date found in the filename when sent to a site. Currently working date types are: 20200816 ; 200816 ; 2020-08-16 ; 2020.08.16
+- $EP - This word is changed to the episode number in the filename when sent to a site. Currently working date types are: S01E01 ; EP01 ; Ep01 ; E01 (it isn't limited to just two numbers, it can also be S123E456 or E78910, etc.)
