@@ -44,7 +44,7 @@ There are three ways to add a series:
 2. First enter all the information about the series on the right side of the interface and then click on the Add Series button, choose the name all the shows in that series have in common and press Add.
 3. Press Add Series button, click on the series you wish to copy, change the name and/or extension and press Copy/Add. Now the new series has the same information.
 
-After pressing Reload, you can see the Series Name column fill up if it matches a file name and extension.
+After pressing Reload, you can see the Series Name column to fill up if it matches a file name and extension.
 
 #### Entering information about a show
 The program has two types of memory: application and database memory. All the information you enter about a file is stored in the application memory. This means that you don't actually have to add a series if you don't want to. The application memory is deleted when you press Reload or close the program. Only when you press Save, the information is stored in database (provided you have previously added the series).
