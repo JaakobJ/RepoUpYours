@@ -7,6 +7,8 @@ Program with a GUI which uses a SQLite database to store information about shows
 4. Uploads the thumbnail to imgbb and gets a link to the image.
 5. Uploads the torrent along with all the information and thumbnail to a hosting site.
 
+### Testing the program
+
 You can find a zip file with a working jar in here: [Up_Yours_jar.zip](https://github.com/JaakobJ/RepoUpYours/blob/master/Up_Yours_jar.zip) . Everything necessary for opening the program is inside. Just extract it to a new folder and open it with Up Yours.jar. This has been tested with jre1.8.0_241 (Java Version 8 Update 241). The 5th part (*Uploads the torrent along with...*) does not work with this .jar. That part has been intentionally commented out here: [src/main/java/GUI/App.java line 296](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/App.java#L296). 
 
 The program can be tested with inserting two values in Settings: "Upload path" which is the folder containing your video files and "imgbb API Token" which you can get for free when registering at [imgbb](https://imgbb.com/). Then insert random integer for TMDB ID and press "Upload all". Torrent file, thumbnails will be created to the same folder where your video files are located and the thumbnail is uploaded to your imgbb account.
