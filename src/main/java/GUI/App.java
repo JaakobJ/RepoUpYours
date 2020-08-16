@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -232,75 +233,78 @@ public class App {
             public void actionPerformed(ActionEvent e) {
                 SaveTempInfoIntoDataHelper();
 
-                for (DataHelper show : list) {
-                    try {
-                        messageBoxMessage.append("Creating thumbnail for file " + show.getFileName() + "." + show.getExtension() + "\n");
-                        createThumbnail.create(show);
-                        messageBoxMessage.append("Thumbnail created for file " + show.getFileName() + "." + show.getExtension() + "\n");
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                        StringWriter sw = new StringWriter();
-                        PrintWriter pw = new PrintWriter(sw);
-                        ioException.printStackTrace(pw);
-                        messageBoxMessage.append(sw.toString());
-                    }
-                    try {
-                        messageBoxMessage.append("Creating torrent for file " + show.getFileName() + "." + show.getExtension() + "\n");
-                        torrent.createTorrent(show);
-                        messageBoxMessage.append("Torrent created for file " + show.getFileName() + "." + show.getExtension() + "\n");
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                        StringWriter sw = new StringWriter();
-                        PrintWriter pw = new PrintWriter(sw);
-                        ioException.printStackTrace(pw);
-                        messageBoxMessage.append(sw.toString());
-                    }
-                    try {
-                        messageBoxMessage.append("Creating mediainfo for file " + show.getFileName() + "." + show.getExtension() + "\n");
-                        getMediainfo.addMediainfoToDataHelper(show);
-                        messageBoxMessage.append("Mediainfo created for file " + show.getFileName() + "." + show.getExtension() + "\n");
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                        StringWriter sw = new StringWriter();
-                        PrintWriter pw = new PrintWriter(sw);
-                        ioException.printStackTrace(pw);
-                        messageBoxMessage.append(sw.toString());
-                    }
+                if (checkForTmdbEntry()) {
 
-                    while(!show.getThumbnailFile().exists()) {
+                    for (DataHelper show : list) {
                         try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException interruptedException) {
-                            interruptedException.printStackTrace();
+                            messageBoxMessage.append("Creating thumbnail for file " + show.getFileName() + "." + show.getExtension() + "\n");
+                            createThumbnail.create(show);
+                            messageBoxMessage.append("Thumbnail created for file " + show.getFileName() + "." + show.getExtension() + "\n");
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                            StringWriter sw = new StringWriter();
+                            PrintWriter pw = new PrintWriter(sw);
+                            ioException.printStackTrace(pw);
+                            messageBoxMessage.append(sw.toString());
                         }
-                    }
+                        try {
+                            messageBoxMessage.append("Creating torrent for file " + show.getFileName() + "." + show.getExtension() + "\n");
+                            torrent.createTorrent(show);
+                            messageBoxMessage.append("Torrent created for file " + show.getFileName() + "." + show.getExtension() + "\n");
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                            StringWriter sw = new StringWriter();
+                            PrintWriter pw = new PrintWriter(sw);
+                            ioException.printStackTrace(pw);
+                            messageBoxMessage.append(sw.toString());
+                        }
+                        try {
+                            messageBoxMessage.append("Creating mediainfo for file " + show.getFileName() + "." + show.getExtension() + "\n");
+                            getMediainfo.addMediainfoToDataHelper(show);
+                            messageBoxMessage.append("Mediainfo created for file " + show.getFileName() + "." + show.getExtension() + "\n");
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                            StringWriter sw = new StringWriter();
+                            PrintWriter pw = new PrintWriter(sw);
+                            ioException.printStackTrace(pw);
+                            messageBoxMessage.append(sw.toString());
+                        }
 
-                    try {
-                        ResultSet rs = statement.executeQuery("select * from settings where id=0");
-                        messageBoxMessage.append(sendToIMGBB.send(show, rs.getString("imgbb_api_token")));
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
-                        StringWriter sw = new StringWriter();
-                        PrintWriter pw = new PrintWriter(sw);
-                        throwables.printStackTrace(pw);
-                        messageBoxMessage.append(sw.toString());
-                    }
+                        while (!show.getThumbnailFile().exists()) {
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException interruptedException) {
+                                interruptedException.printStackTrace();
+                            }
+                        }
 
-                    try {
-                        ResultSet rs = statement.executeQuery("select * from settings where id=0");
-                        messageBoxMessage.append(sendToSite.send(show, rs.getString("user_id"), rs.getString("api_token")));
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
-                        StringWriter sw = new StringWriter();
-                        PrintWriter pw = new PrintWriter(sw);
-                        throwables.printStackTrace(pw);
-                        messageBoxMessage.append(sw.toString());
-                    }
+                        try {
+                            ResultSet rs = statement.executeQuery("select * from settings where id=0");
+                            messageBoxMessage.append(sendToIMGBB.send(show, rs.getString("imgbb_api_token")));
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                            StringWriter sw = new StringWriter();
+                            PrintWriter pw = new PrintWriter(sw);
+                            throwables.printStackTrace(pw);
+                            messageBoxMessage.append(sw.toString());
+                        }
 
+                        try {
+                            ResultSet rs = statement.executeQuery("select * from settings where id=0");
+                            messageBoxMessage.append(sendToSite.send(show, rs.getString("user_id"), rs.getString("api_token")));
+                        } catch (SQLException throwables) {
+                            throwables.printStackTrace();
+                            StringWriter sw = new StringWriter();
+                            PrintWriter pw = new PrintWriter(sw);
+                            throwables.printStackTrace(pw);
+                            messageBoxMessage.append(sw.toString());
+                        }
+
+                    }
+                    progressBar.setStringPainted(true);
+                    progressBar.setValue(100);
+                    progressBar.setString("DONE");
                 }
-                progressBar.setStringPainted(true);
-                progressBar.setValue(100);
-                progressBar.setString("DONE");
             }
         });
 
@@ -487,6 +491,32 @@ public class App {
     private String getSourceFolderPathFromDB() throws SQLException {
         ResultSet rs = statement.executeQuery("select path from settings where id=0");
         return rs.getString("path");
+    }
+
+    private boolean checkForTmdbEntry() {
+        List<DataHelper> faultyShows = new ArrayList<>();
+
+        for (DataHelper show : list ) {
+            if (show.getTmdbID().equals("0")) {
+                faultyShows.add(show);
+            }
+        }
+
+        if (!faultyShows.isEmpty()) {
+            StringBuilder message = new StringBuilder("UPLOAD DENIED\n\nThe following entries are missing a TMDB ID:\n");
+
+            for (DataHelper show : faultyShows) {
+                message.append(show.getFileName() + "." + show.getExtension() + "\n");
+            }
+
+            JFrame frame = new JFrame("Shows missing TMDB ID number.");
+            frame.setContentPane(new PopUpMessage(message.toString()).popUpPanel);
+            frame.pack();
+            frame.setVisible(true);
+            frame.setLocationRelativeTo(null);
+        }
+
+        return faultyShows.isEmpty();
     }
 
 
