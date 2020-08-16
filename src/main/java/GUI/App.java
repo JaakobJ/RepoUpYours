@@ -277,7 +277,7 @@ public class App {
 
                     try {
                         ResultSet rs = statement.executeQuery("select * from settings where id=0");
-                        //messageBoxMessage.append(sendToIMGBB.send(show, rs.getString("imgbb_api_token")));
+                        messageBoxMessage.append(sendToIMGBB.send(show, rs.getString("imgbb_api_token")));
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                         StringWriter sw = new StringWriter();
