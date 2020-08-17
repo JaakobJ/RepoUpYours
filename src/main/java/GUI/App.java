@@ -237,17 +237,6 @@ public class App {
 
                     for (DataHelper show : list) {
                         try {
-                            messageBoxMessage.append("Creating thumbnail for file " + show.getFileName() + "." + show.getExtension() + "\n");
-                            createThumbnail.create(show);
-                            messageBoxMessage.append("Thumbnail created for file " + show.getFileName() + "." + show.getExtension() + "\n");
-                        } catch (IOException ioException) {
-                            ioException.printStackTrace();
-                            StringWriter sw = new StringWriter();
-                            PrintWriter pw = new PrintWriter(sw);
-                            ioException.printStackTrace(pw);
-                            messageBoxMessage.append(sw.toString());
-                        }
-                        try {
                             messageBoxMessage.append("Creating torrent for file " + show.getFileName() + "." + show.getExtension() + "\n");
                             torrent.createTorrent(show);
                             messageBoxMessage.append("Torrent created for file " + show.getFileName() + "." + show.getExtension() + "\n");
@@ -262,6 +251,17 @@ public class App {
                             messageBoxMessage.append("Creating mediainfo for file " + show.getFileName() + "." + show.getExtension() + "\n");
                             getMediainfo.addMediainfoToDataHelper(show);
                             messageBoxMessage.append("Mediainfo created for file " + show.getFileName() + "." + show.getExtension() + "\n");
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                            StringWriter sw = new StringWriter();
+                            PrintWriter pw = new PrintWriter(sw);
+                            ioException.printStackTrace(pw);
+                            messageBoxMessage.append(sw.toString());
+                        }
+                        try {
+                            messageBoxMessage.append("Creating thumbnail for file " + show.getFileName() + "." + show.getExtension() + "\n");
+                            createThumbnail.create(show);
+                            messageBoxMessage.append("Thumbnail created for file " + show.getFileName() + "." + show.getExtension() + "\n");
                         } catch (IOException ioException) {
                             ioException.printStackTrace();
                             StringWriter sw = new StringWriter();
@@ -289,11 +289,15 @@ public class App {
                             messageBoxMessage.append(sw.toString());
                         }
 
-                        while (!show.getTorrentFile().exists()) {
+                        while (true) {
+                            long oldSize = show.getTorrentFile().length();
                             try {
-                                Thread.sleep(100);
+                                Thread.sleep(200);
                             } catch (InterruptedException interruptedException) {
                                 interruptedException.printStackTrace();
+                            }
+                            if (oldSize == show.getTorrentFile().length()) {
+                                break;
                             }
                         }
 
