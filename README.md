@@ -9,7 +9,7 @@ Program with a GUI which uses a SQLite database to store information about shows
 
 ### Testing the program
 
-You can find a zip file with a working jar in here: [Up_Yours_jar.zip](https://github.com/JaakobJ/RepoUpYours/blob/master/Up_Yours_jar.zip) . Everything necessary for opening the program is inside. Just extract it to a new folder and open it with Up Yours.jar (*in case you have a 32-bit system, have to replace jlibtorrent-1.2.8.0.dll file. You can download the 32-bit one [here](https://mega.nz/file/RDACyAyA#VpYjSdetEcxgD0BaYXfMdzdX7k86du8TTOxjf4yrw1Y)*). The Up Yours.jar has been tested with jre1.8.0_241 (Java Version 8 Update 241). The 5th part (*Uploads the torrent along with...*) does not work with this .jar. That part has been intentionally commented out here: [src/main/java/GUI/App.java line 296](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/App.java#L296). 
+You can find a zip file with a working jar in here: [Up_Yours_jar.zip](https://github.com/JaakobJ/RepoUpYours/blob/master/Up_Yours_jar.zip) . Everything necessary for opening the program is inside. Just extract it to a new folder and open it with Up Yours.jar (*in case you have a 32-bit system, have to replace jlibtorrent-1.2.8.0.dll file. You can download the 32-bit one [here](https://mega.nz/file/RDACyAyA#VpYjSdetEcxgD0BaYXfMdzdX7k86du8TTOxjf4yrw1Y)*). The Up Yours.jar has been tested with jre1.8.0_241 (Java Version 8 Update 241). The 5th part (*Uploads the torrent along with...*) does not work with this .jar. That part has been intentionally commented out here: [src/main/java/GUI/App.java line 286](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/App.java#L286). 
 
 The program can be tested after inserting two values in Settings: "Upload path" which is the folder containing your video files and "imgbb API Token" which you can get for free when registering at [imgbb](https://imgbb.com/). Then insert a random integer > 1 for TMDB ID and press "Upload all". Torrent file and thumbnails will be created to the same folder where your video files are located and the thumbnail is uploaded to your imgbb account.
 
@@ -17,7 +17,7 @@ Database can be tested when first Adding a series, then Reloading and by inserti
 
 ### Using in IDE
 
-For using the database, [src/main/java/lib/sqlite-jdbc-3.30.1.jar](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/lib/sqlite-jdbc-3.30.1.jar) needs to be added as a dependency. The database file is [database.db](https://github.com/JaakobJ/RepoUpYours/blob/master/database.db) . Database needs to be linked in src/main/java/GUI/App.java [line 479](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/App.java#L479). 
+For using the database, [src/main/java/lib/sqlite-jdbc-3.30.1.jar](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/lib/sqlite-jdbc-3.30.1.jar) needs to be added as a dependency. The database file is [database.db](https://github.com/JaakobJ/RepoUpYours/blob/master/database.db) . Database needs to be linked in src/main/java/GUI/App.java [line 468](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/App.java#L468). 
 
 For thumbnail creation, [lib/mtn-win32/bin/mtn.exe](https://github.com/JaakobJ/RepoUpYours/blob/master/lib/mtn-win32/bin/mtn.exe) needs to be linked in src/main/java/GUI/CreateThumbnail.java [line 25](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/CreateThumbnail.java#L25) (two places on the same line). mtn.exe is used with Java Runtime/Process.
 
@@ -55,3 +55,4 @@ There are some useful $ words which you can use in the title and description:
 - $FILENAME - This word is changed to the filename when sent to a site
 - $DATE - This word is changed to the date found in the filename when sent to a site. Currently working date types are: 20200816 ; 200816 ; 2020-08-16 ; 2020.08.16
 - $EP - This word is changed to the episode number in the filename when sent to a site. Currently working episode types are: S01E01 ; EP01 ; Ep01 ; E01 (it isn't limited to just two numbers, it can also be S123E456 or E78910, etc.)
+- $# - This word is changed to the the number behind # in the filename when sent to JPTV.club. For example #4 or #123.
