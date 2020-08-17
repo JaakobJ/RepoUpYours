@@ -55,4 +55,4 @@ There are some useful $ words which you can use in the title and description:
 - $FILENAME - This word is changed to the filename when sent to a site
 - $DATE - This word is changed to the date found in the filename when sent to a site. Currently working date types are: 20200816 ; 200816 ; 2020-08-16 ; 2020.08.16
 - $EP - This word is changed to the episode number in the filename when sent to a site. Currently working episode types are: S01E01 ; EP01 ; Ep01 ; E01 (it isn't limited to just two numbers, it can also be S123E456 or E78910, etc.)
-- $# - This word is changed to the the number behind # in the filename when sent to JPTV.club. For example #4 or #123.
+- $# - This word is changed to the the number behind # in the filename when sent to a site. For example #4 or #123.
