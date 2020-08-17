@@ -269,15 +269,6 @@ public class App {
                             ioException.printStackTrace(pw);
                             messageBoxMessage.append(sw.toString());
                         }
-
-                        while (!show.getThumbnailFile().exists()) {
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException interruptedException) {
-                                interruptedException.printStackTrace();
-                            }
-                        }
-
                         try {
                             ResultSet rs = statement.executeQuery("select * from settings where id=0");
                             messageBoxMessage.append(sendToIMGBB.send(show, rs.getString("imgbb_api_token")));
@@ -288,19 +279,6 @@ public class App {
                             throwables.printStackTrace(pw);
                             messageBoxMessage.append(sw.toString());
                         }
-
-                        while (true) {
-                            long oldSize = show.getTorrentFile().length();
-                            try {
-                                Thread.sleep(200);
-                            } catch (InterruptedException interruptedException) {
-                                interruptedException.printStackTrace();
-                            }
-                            if (oldSize == show.getTorrentFile().length()) {
-                                break;
-                            }
-                        }
-
                         try {
                             ResultSet rs = statement.executeQuery("select * from settings where id=0");
 
@@ -313,7 +291,6 @@ public class App {
                             throwables.printStackTrace(pw);
                             messageBoxMessage.append(sw.toString());
                         }
-
                     }
                     progressBar.setStringPainted(true);
                     progressBar.setValue(100);

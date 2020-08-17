@@ -44,6 +44,20 @@ public class SendToSite {
 
     public String send(DataHelper show, String user_id, String api_token) {
         StringBuilder messageToReturn = new StringBuilder();
+        int counter = 0;
+        while (!show.getThumbnailLink().isEmpty() && !show.getTorrentFile().exists()) {
+            try {
+                if (counter == 100) {
+                    // If 30 seconds have been waited -> break
+                    messageToReturn.append("ERROR! Unable to locate thumbnail picture and/or torrent file, will not attempt to send them to *****.");
+                    return messageToReturn.toString();
+                }
+                Thread.sleep(300);
+                counter++;
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
+        }
 
         String builtTitle = show.getTitle().replaceAll("\\$FILENAME", show.getFileName());
         String builtDescription = show.getDescription().replaceAll("\n", "<br>");

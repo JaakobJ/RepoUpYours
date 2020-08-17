@@ -19,6 +19,9 @@ public class GetMediainfo {
         StringBuilder mediainfo = new StringBuilder();
         String line;
         while((line=input.readLine()) != null) {
+            if (line.contains("Service name")) {
+                break;
+            }
             mediainfo.append(line + "\n");
         }
         show.setMediainfo(mediainfo.toString());

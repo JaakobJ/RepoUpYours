@@ -10,6 +10,20 @@ public class SendToIMGBB {
 
     public String send(DataHelper show, String imgbb_api) {
         StringBuilder messageToReturn = new StringBuilder();
+        int counter = 0;
+        while (!show.getThumbnailFile().exists()) {
+            try {
+                if (counter == 100) {
+                    // If 30 seconds have been waited -> break
+                    messageToReturn.append("ERROR! Unable to locate thumbnail picture, will not attempt to send it to imgbb.");
+                    return messageToReturn.toString();
+                }
+                Thread.sleep(300);
+                counter++;
+            } catch (InterruptedException interruptedException) {
+                interruptedException.printStackTrace();
+            }
+        }
 
         Unirest.config().reset();
         Unirest.config().socketTimeout(2000).connectTimeout(5000);
