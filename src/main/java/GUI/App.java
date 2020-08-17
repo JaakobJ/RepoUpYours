@@ -289,6 +289,14 @@ public class App {
                             messageBoxMessage.append(sw.toString());
                         }
 
+                        while (!show.getTorrentFile().exists()) {
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException interruptedException) {
+                                interruptedException.printStackTrace();
+                            }
+                        }
+
                         try {
                             ResultSet rs = statement.executeQuery("select * from settings where id=0");
 

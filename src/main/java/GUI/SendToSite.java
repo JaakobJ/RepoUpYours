@@ -66,6 +66,13 @@ public class SendToSite {
             builtDescription = builtDescription.replaceAll("\\$EP", matcher2.group());
         }
 
+        // Matches #01 ; #001 (there can be however many numbers you want)
+        Pattern pattern3 = Pattern.compile("#\\d+");
+        Matcher matcher3 = pattern3.matcher(show.getFileName());
+        if (matcher3.find()) {
+            builtTitle = builtTitle.replaceAll("\\$#", matcher3.group());
+            builtDescription = builtDescription.replaceAll("\\$#", matcher3.group());
+        }
 
         if (!show.getThumbnailLink().isEmpty()) {
             builtDescription = builtDescription + "<br><br>[img]" + show.getThumbnailLink() + "[/img]";
