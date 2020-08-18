@@ -1,8 +1,8 @@
 # RepoUpYours
 
-Program with a GUI which uses a SQLite database to store information about shows. The program:
-1. Creates a torrent out of video file.
-2. Creates a thumbnail out of video file.
+An application with a GUI which uses a SQLite database to store information about shows. The program:
+1. Creates a torrent out of a video file/folder.
+2. Creates a thumbnail out of a video file.
 3. Gets mediainfo about the video file.
 4. Uploads the thumbnail to imgbb and gets a link to the image.
 5. Uploads the torrent along with all the information and thumbnail to a hosting site.
