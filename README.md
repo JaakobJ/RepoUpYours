@@ -56,3 +56,10 @@ There are some useful $ words which you can use in the title and description:
 - $DATE - This word is changed to the date found in the filename when sent to a site. Currently working date types are: 20200816 ; 200816 ; 2020-08-16 ; 2020.08.16
 - $EP - This word is changed to the episode number in the filename when sent to a site. Currently working episode types are: S01E01 ; EP01 ; Ep01 ; E01 (it isn't limited to just two numbers, it can also be S123E456 or E78910, etc.)
 - $# - This word is changed to the the number behind # in the filename when sent to a site. For example #4 or #123.
+
+#### Upload All
+Every file needs to have a TMDB ID. Without it you're unable to upload anything. In case you try to, a pop-up window will appear listing all the files missing a TMDB ID.
+
+After successfully pressing the Upload All button, mediainfo about the video file is retrieved and torrent and thumbnail images created. The thumbnail image is sent to your imgbb account and a link to the image is received. ~~The image link is automatically attached to the description when the torrent along with mediainfo and all the information you entered is sent to a site.~~ (This method call has been intentionally commented out in [src/main/java/GUI/App.java line 286](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/App.java#L286)) This all can take a bit. After everything is uploaded, you can see a "Done" message at the bottom of the application. You can find the newly downloaded torrent file in the same folder where your video files are (the folder you specified in the Settings).
+
+After uploading, make sure to press the Log button to see if everything went successfully, at least during your first uploads with Up Yours.
