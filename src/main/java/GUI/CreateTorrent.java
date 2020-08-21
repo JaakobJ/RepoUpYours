@@ -9,8 +9,12 @@ import com.frostwire.jlibtorrent.swig.libtorrent;
 import java.io.*;
 import java.util.Map;
 
+// The class for creating torrent out of a video file/folder
+// The class is used by App.java
+// The methods in the class are using class DataHelper.java
 public class CreateTorrent {
 
+    // Method which creates a torrent file out of a video file/folder and stores the torrent file in DataHelper
     public void createTorrent(DataHelper upFile) throws IOException {
         File torrentFile = new File(upFile.getActualThisFile().getParent() + "\\" + "tempname" + ".torrent");
 

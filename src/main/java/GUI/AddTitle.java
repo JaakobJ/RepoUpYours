@@ -10,6 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+// The class which is opened when Add Series button is pressed in GUI
+// The class is used by App.java
+// The methods in the class are using class DataHelper.java
 public class AddTitle {
     public JPanel addTitlePanel;
     private JTable titleJTable;
@@ -23,12 +26,15 @@ public class AddTitle {
     private DefaultTableModel tableModel;
 
     public AddTitle(final DataHelper show, final Statement statement) throws SQLException {
+        // Fill the Name and Extension text fields
         addTitleTextField.setText(show.getFileName());
         addExtensionTextField.setText(show.getExtension());
 
+        // Set the caret position of Name and Extension text fields to the beginning
         addTitleTextField.setCaretPosition(0);
         addExtensionTextField.setCaretPosition(0);
 
+        // Choose a tableModel
         String[][] data = {};
         String[] columnNames = {"Show name", "Extension"};
         tableModel = new DefaultTableModel(data, columnNames) {
@@ -41,26 +47,30 @@ public class AddTitle {
         titleJTable.setModel(tableModel);
         titleJTable.getTableHeader().setReorderingAllowed(false);
 
+        // Fill the table
         UpdateTable(statement);
 
         titleJTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent event) {
-                // do some actions here, for example
-                // print first column value from selected row
                 if (titleJTable.getSelectedRow() != -1) {
+                    // If a show is selected in the table, change the Name and Extension text fields to match the selected show
                     addTitleTextField.setText(titleJTable.getValueAt(titleJTable.getSelectedRow(), 0).toString());
                     addExtensionTextField.setText(titleJTable.getValueAt(titleJTable.getSelectedRow(), 1).toString());
+                    // Set the caret position of Name and Extension text fields to the beginning
                     addTitleTextField.setCaretPosition(0);
                     addExtensionTextField.setCaretPosition(0);
                 }
             }
         });
 
+        // Add button
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (addTitleTextField.getText().trim().length() > 0 && addExtensionTextField.getText().trim().length() > 0) {
+                    // If name and extension are not empty strings or just spaces
                     try {
+                        // Add the series (information from DataHelper) to database
                         statement.executeUpdate("INSERT INTO shows (showname) VALUES('" +
                                 addTitleTextField.getText().replaceAll("'", "''") + "." + addExtensionTextField.getText().replaceAll("'", "''") + "');");
 
@@ -93,13 +103,17 @@ public class AddTitle {
 
         deleteButton.setToolTipText("Select the show in the table you wish to delete.");
 
+        // Delete button
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (addTitleTextField.getText().trim().length() > 0 && addExtensionTextField.getText().trim().length() > 0) {
+                    // If name and extension are not empty strings or just spaces
                     try {
+                        // Delete the show from database
                         statement.executeUpdate("DELETE FROM shows WHERE showname=="
                                 + "'" + addTitleTextField.getText().replaceAll("'", "''") + "." + addExtensionTextField.getText().replaceAll("'", "''") + "';");
+                        // Update table, so the new addition can be seen
                         UpdateTable(statement);
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
@@ -110,15 +124,20 @@ public class AddTitle {
 
         copyAndAddButton.setToolTipText("Select the show in the table you wish to copy. Then add a new name and/or extension.");
 
+        // Copy/Add button
         copyAndAddButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (addTitleTextField.getText().trim().length() > 0 && addExtensionTextField.getText().trim().length() > 0) {
+                    // If name and extension are not empty strings or just spaces
                     if (titleJTable.getSelectedRow() != -1) {
+                        // When a show is selected in table
                         try {
+                            // Create the new show and copy the selected shows information into the new show
                             statement.executeUpdate("INSERT INTO shows (showname, description, category_id, type_id, resolution_id, tmdb, imdb, tvdb, mal, igdb, anonymous, stream, sd, internal, thumbnail, screenshots, name) "
                                     + "SELECT '" + addTitleTextField.getText().replaceAll("'", "''") + "." + addExtensionTextField.getText().replaceAll("'", "''") + "', description, category_id, type_id, resolution_id, tmdb, imdb, tvdb, mal, igdb, anonymous, stream, sd, internal, thumbnail, screenshots, name "
                                     + "FROM shows WHERE showname='" + titleJTable.getValueAt(titleJTable.getSelectedRow(), 0).toString().replaceAll("'", "''") + "." + titleJTable.getValueAt(titleJTable.getSelectedRow(), 1).toString().replaceAll("'", "''") + "';");
+                            // Update table, so the new addition can be seen
                             UpdateTable(statement);
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();
@@ -129,13 +148,14 @@ public class AddTitle {
         });
     }
 
+    // Method to update the table
     private void UpdateTable(Statement statement) throws SQLException {
         tableModel.setRowCount(0); // Empties table
-        ResultSet rs = statement.executeQuery("select count(showname) from shows");
-        int size = ((Number) rs.getObject(1)).intValue();
+
         Object rowData[] = new Object[2];
 
-        rs = statement.executeQuery("select showname from shows");
+        // List all the show names from databse and add them to the table
+        ResultSet rs = statement.executeQuery("select showname from shows");
         while(rs.next())
         {
             String[] tokens = rs.getString("showname").split("\\.(?=[^\\.]+$)");

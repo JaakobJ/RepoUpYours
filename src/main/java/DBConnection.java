@@ -1,5 +1,3 @@
-package GUI;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -22,7 +20,7 @@ public class DBConnection {
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
             ResultSet rs = statement.executeQuery("select * from shows where showname = "
-                    + "'VS嵐" + "." + "mp4'");
+                    + "'namename" + "." + "mp4'");
             while(rs.next())
             {
                 // read the result set

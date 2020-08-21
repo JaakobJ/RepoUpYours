@@ -2,6 +2,10 @@ package GUI;
 
 import java.io.File;
 
+// DataHelper is the class where all the information about a file is stored
+// Every entry seen in Up Yours File Table is a DataHelper
+// The class is used in classes AddTitle.java, App.java, CreateThumbnail.java, CreateTorrent.java, GetMediainfo.java,
+// GettingFiles.java, SentToIMGBB.java and SendToSite.java
 public class DataHelper {
     private String fileName;
     private String shortName;

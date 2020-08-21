@@ -23,6 +23,9 @@ import java.sql.Statement;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 
+// The main GUI class for Up Yours upload tool.
+// The class is using classes AddTitle.java, CreateThumbnail.java, CreateTorrent.java, DataHelper.java,
+// GetMediainfo.java, GettingFiles.java, PopUpMessage.java, SendToIMGBB.java, SentToSite.java and Settings.java
 public class App {
     private JPanel mainPanel;
     private JButton settingsButton;
@@ -69,6 +72,7 @@ public class App {
     private Connection connection = null;
     private Statement statement = null;
 
+    // To remember which show is currently selected
     private DataHelper currentlySelectedShow = null;
 
     private CreateTorrent torrent = new CreateTorrent();
@@ -80,6 +84,7 @@ public class App {
     private StringBuilder messageBoxMessage;
 
     public App() throws SQLException {
+        // Stores the message to a user which is displayed when clicked on the Log button
         messageBoxMessage = new StringBuilder();
 
         anonymousGroup.add(anonymousYesRadioButton);
@@ -91,28 +96,35 @@ public class App {
         internalGroup.add(internalYesRadioButton);
         internalGroup.add(internalNoRadioButton);
 
+        // Create Database connection
         createDBConnection();
 
+        // Choose a tableModel
         String[][] data = {};
         String[] columnNames = {"File Name", "Series Name", "Extension"};
         tableModel = new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                //all cells false
+                // Disables cell editing.
                 return false;
             }
         };
 
         // https://stackoverflow.com/questions/10128064/jtable-selected-row-click-event
+        // File Table Action Listener
         fileTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent event) {
                 if (fileTable.getSelectedRow() != -1) {
+                    // When another show is selected in File Table
+                    // Save the information of previously selected show
                     SaveTempInfoIntoDataHelper();
-
                     for (DataHelper show : list) {
+                        // Finds the DataHelper which was selected in File Table
                         if (Objects.equals(show.getFileName(), fileTable.getValueAt(fileTable.getSelectedRow(), 0).toString())
                                 && Objects.equals(show.getExtension(), fileTable.getValueAt(fileTable.getSelectedRow(), 2).toString())) {
+                            // Display the selected show's information
                             ShowInfo(show);
+                            // Change the currently selected show
                             currentlySelectedShow = show;
                             break;
                         }
@@ -126,16 +138,21 @@ public class App {
         fileTable.getColumnModel().getColumn(0).setPreferredWidth(175);
         fileTable.getColumnModel().getColumn(1).setPreferredWidth(125);
         fileTable.getColumnModel().getColumn(2).setPreferredWidth(50);
+        // Fill the File Table
         UpdateFileTable(getSourceFolderPathFromDB());
 
+        // Save button
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (fileTable.getSelectedRow() != -1) {
+                    // If a show is currently selected in File Table
                     for (DataHelper show : list) {
+                        // Finds the DataHelper which is currently selected in File Table
                         if (Objects.equals(show.getFileName(), fileTable.getValueAt(fileTable.getSelectedRow(), 0).toString())
                                 && Objects.equals(show.getExtension(), fileTable.getValueAt(fileTable.getSelectedRow(), 2).toString())) {
                             try {
+                                // Save the updated info into the DataHelper and database
                                 UpdateShow(show);
                             } catch (SQLException throwables) {
                                 throwables.printStackTrace();
@@ -151,6 +168,7 @@ public class App {
             }
         });
 
+        // Settings button (src/main/java/GUI/Settings.java)
         settingsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -170,13 +188,15 @@ public class App {
             }
         });
 
+        // Add Series button (src/main/java/GUI/AddTitle.java)
         addTitleButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Save the information of previously selected show
                 SaveTempInfoIntoDataHelper();
                 JFrame frame = new JFrame("Add Title");
                 if (fileTable.getSelectedRow() == -1) {
-                    // Only when no titles in the table
+                    // Only when no shows in File Table
                     DataHelper atarashii = new DataHelper("", "", "", new File(""));
                     try {
                         frame.setContentPane(new AddTitle(atarashii, statement).addTitlePanel);
@@ -190,6 +210,7 @@ public class App {
                 }
                 else {
                     for (DataHelper show : list) {
+                        // Finds the DataHelper which is currently selected in File Table
                         if (Objects.equals(show.getFileName(), fileTable.getValueAt(fileTable.getSelectedRow(), 0).toString())
                                 && Objects.equals(show.getExtension(), fileTable.getValueAt(fileTable.getSelectedRow(), 2).toString())) {
                             try {
@@ -213,10 +234,12 @@ public class App {
 
         updateButton.setToolTipText("Pressing Reload deletes unfinished information if you haven't pressed Save.");
 
+        // Reload button
         updateButton.addActionListener(new ActionListener()  {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+                    // Update the File Table
                     UpdateFileTable(getSourceFolderPathFromDB());
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -228,16 +251,20 @@ public class App {
             }
         });
 
+        // Upload All button
         uploadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Save the information of previously selected show
                 SaveTempInfoIntoDataHelper();
 
+                // Check if all shows have TMDB ID
                 if (checkForTmdbEntry()) {
-
+                    // If yes, for every show in the File Table:
                     for (DataHelper show : list) {
                         try {
                             messageBoxMessage.append("Creating torrent for file " + show.getFileName() + "." + show.getExtension() + "\n");
+                            // Create torrent file
                             torrent.createTorrent(show);
                             messageBoxMessage.append("Torrent created for file " + show.getFileName() + "." + show.getExtension() + "\n");
                         } catch (IOException ioException) {
@@ -249,6 +276,7 @@ public class App {
                         }
                         try {
                             messageBoxMessage.append("Creating mediainfo for file " + show.getFileName() + "." + show.getExtension() + "\n");
+                            // Get mediainfo
                             getMediainfo.addMediainfoToDataHelper(show);
                             messageBoxMessage.append("Mediainfo created for file " + show.getFileName() + "." + show.getExtension() + "\n");
                         } catch (IOException ioException) {
@@ -260,6 +288,7 @@ public class App {
                         }
                         try {
                             messageBoxMessage.append("Creating thumbnail for file " + show.getFileName() + "." + show.getExtension() + "\n");
+                            // Create thumbnail
                             createThumbnail.create(show);
                             messageBoxMessage.append("Thumbnail created for file " + show.getFileName() + "." + show.getExtension() + "\n");
                         } catch (IOException ioException) {
@@ -271,6 +300,7 @@ public class App {
                         }
                         try {
                             ResultSet rs = statement.executeQuery("select * from settings where id=0");
+                            // Upload the thumbnail to imgbb and receive a link
                             messageBoxMessage.append(sendToIMGBB.send(show, rs.getString("imgbb_api_token")));
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();
@@ -281,8 +311,8 @@ public class App {
                         }
                         try {
                             ResultSet rs = statement.executeQuery("select * from settings where id=0");
-
-                            // Sending the torrent, all the info and thumbnail to "a site" is disabled
+                            // Upload the torrent along with all the information to "a site"
+                            // This is currently disabled as it's not possible to test this without having an account on that site
                             //messageBoxMessage.append(sendToSite.send(show, rs.getString("user_id"), rs.getString("api_token")));
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();
@@ -292,6 +322,7 @@ public class App {
                             messageBoxMessage.append(sw.toString());
                         }
                     }
+                    // Updates Progress Bar
                     progressBar.setStringPainted(true);
                     progressBar.setValue(100);
                     progressBar.setString("DONE");
@@ -299,9 +330,11 @@ public class App {
             }
         });
 
+        // Log button
         logButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                // Display the message compiled with StringBuilder messageBoxMessage
                 JFrame frame = new JFrame("Log");
                 frame.setContentPane(new PopUpMessage(messageBoxMessage.toString()).popUpPanel);
                 frame.pack();
@@ -311,21 +344,26 @@ public class App {
         });
     }
 
+    // Method to update File Table
     private void UpdateFileTable(String path) throws SQLException {
 
         tableModel.setRowCount(0); // Empties table
 
         if (!Files.exists(Paths.get(path)) || path.isEmpty()) {
+            // If path to the source folder does not exist
             return;
         }
 
+        // Get all the files in the source folder as empty DataHelpers (with no title, description, etc.)
         GettingFiles folderFiles = new GettingFiles(path);
         list = folderFiles.getNames();
 
+        // Fill the File Table
         Object rowData[] = new Object[3];
         for (DataHelper show : list) {
             rowData[0] = show.getFileName();
 
+            // Get all the series names from database and add them to the File Table
             ResultSet rs = statement.executeQuery("select showname from shows");
             String showname = "";
             String extension = "";
@@ -336,7 +374,9 @@ public class App {
                 extension = tokens[1];
                 if (show.getFileName().toLowerCase().contains(showname.toLowerCase())
                         && show.getExtension().toLowerCase().equals(extension.toLowerCase())) {
+                    // If the file name contains a series name, set that series name as that DataHelper's series name
                     show.setShortName(showname);
+                    // Fill that DataHelper with the information stored in database about that series
                     FillDBInfo(show);
                     break;
                 }
@@ -347,10 +387,12 @@ public class App {
 
         }
         if (!list.isEmpty()) {
+            // If File Table is not empty, set the first show in File Table default selected
             fileTable.changeSelection(0, 0, false, false);
         }
     }
 
+    // Method to fill a DataHelper with the information stored in database
     private void FillDBInfo(DataHelper show) throws SQLException {
         ResultSet rs = statement.executeQuery("select * from shows where showname = "
                 + "'" + show.getShortName() + "." + show.getExtension() + "'");
@@ -371,6 +413,7 @@ public class App {
         show.setTitle(rs.getString("name"));
     }
 
+    // Method to display the information of a selected show
     private void ShowInfo(DataHelper show) {
         titleTextField.setText(show.getTitle());
         categoryComboBox.setSelectedIndex(Arrays.asList(categoryList).indexOf(show.getCategory()));
@@ -394,17 +437,21 @@ public class App {
         internalYesRadioButton.setSelected(show.isInternal());
         internalNoRadioButton.setSelected(!show.isInternal());
 
+        // Set the caret position of Title and Description field to the beginning
         titleTextField.setCaretPosition(0);
         descriptionTextArea.setCaretPosition(0);
     }
 
+    // Method to save the updated info into DataHelper and database
     private void UpdateShow(DataHelper show) throws SQLException {
         if (!show.getShortName().isEmpty()) {
+            // If a show has a Series Name, update DataHelper and database
             UpdateDataHelper(show);
             UpdateDBShow(show);
         }
     }
 
+    // Method to update DataHelper with updated info
     private void UpdateDataHelper(DataHelper show) {
         show.setTitle(titleTextField.getText());
         show.setCategory(categoryComboBox.getSelectedItem().toString());
@@ -420,6 +467,7 @@ public class App {
         show.setSdContent(sdYesRadioButton.isSelected());
         show.setInternal(internalYesRadioButton.isSelected());
 
+        // TMDB, IMDB, TVDB & MAL IDs are integers. If user inserted something other than an integer, the ID is reset to 0
         try { Integer.parseInt(tmdbTextField.getText()); } catch (NumberFormatException e) {
             show.setTmdbID("0");
         }
@@ -434,7 +482,9 @@ public class App {
         }
     }
 
+    // Method to update database with updated info
     private void UpdateDBShow(DataHelper show) throws SQLException {
+        // anonymous, stream optimized, sd content and internal are stored in database as 1 (true) and 0 (false)
         int anonymous = show.isAnonymous() ? 1 : 0;
         int stream = show.isStreamOptimized() ? 1 : 0;
         int sd = show.isSdContent() ? 1 : 0;
@@ -455,13 +505,15 @@ public class App {
                 + "WHERE showname=" + "'" + show.getShortName() + "." + show.getExtension() + "'");
     }
 
+    // Method to save the information of previously selected show
     private void SaveTempInfoIntoDataHelper() {
         if (currentlySelectedShow != null) {
-            // Saves the inserted data into the left Data Helper
+            // If there is a currentlySelectedShow, save the left information into that DataHelper
             UpdateDataHelper(currentlySelectedShow);
         }
     }
 
+    // Method to create database connection
     private void createDBConnection() {
         try {
             // create a database connection
@@ -479,11 +531,14 @@ public class App {
         }
     }
 
+    // Method to get the source folder (the folder wich is specified in Settings) path from database
     private String getSourceFolderPathFromDB() throws SQLException {
         ResultSet rs = statement.executeQuery("select path from settings where id=0");
         return rs.getString("path");
     }
 
+    // Method to check whether all shows have TMDB ID
+    // If all shows do, return true ; If all shows do not, return false
     private boolean checkForTmdbEntry() {
         List<DataHelper> faultyShows = new ArrayList<>();
 
@@ -500,6 +555,7 @@ public class App {
                 message.append(show.getFileName() + "." + show.getExtension() + "\n");
             }
 
+            // (src/main/java/GUI/PopUpMessage.java)
             JFrame frame = new JFrame("Shows missing TMDB ID number.");
             frame.setContentPane(new PopUpMessage(message.toString()).popUpPanel);
             frame.pack();
@@ -510,7 +566,7 @@ public class App {
         return faultyShows.isEmpty();
     }
 
-
+    // The Main class which opens the GUI
     public static void main(String[] args) throws SQLException {
         JFrame frame = new JFrame("Up Yours");
         frame.setContentPane(new App().mainPanel);
@@ -521,6 +577,7 @@ public class App {
     }
 
     private void createUIComponents() {
+        // Fills combo box selections
         categoryComboBox = new JComboBox<>(categoryList);
 
         typeComboBox = new JComboBox<>(typeList);

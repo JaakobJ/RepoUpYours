@@ -9,7 +9,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// The class for sending torrent, thumbnail and all the information to a hosting site and download the torrent from
+// hosting site
+// The class is used by App.java
+// The methods in the class are using class DataHelper.java
 public class SendToSite {
+    // Category dictionary, since the site has numbers for different categories.
     Map<String, String> categoryMap = new HashMap<String, String>() {{
         put("Movies", "1");
         put("TV", "2");
@@ -19,6 +24,7 @@ public class SendToSite {
         put("Anime Shows", "9");
     }};
 
+    // Type dictionary, since the site has numbers for different types.
     Map<String, String> typeMap = new HashMap<String, String>() {{
         put("BluRay", "3");
         put("DVD", "1");
@@ -29,6 +35,7 @@ public class SendToSite {
         put("Re-encode", "15");
     }};
 
+    // Resolution dictionary, since the site has numbers for different resolutions.
     Map<String, String> resolutionMap = new HashMap<String, String>() {{
         put("4320p", "1");
         put("2160p", "2");
@@ -42,13 +49,19 @@ public class SendToSite {
         put("Other", "10");
     }};
 
+    // Method which sends the all the DataHelpers information to "a site" and downloads the torrent in return
+    // The method returns the message received from the site
     public String send(DataHelper show, String user_id, String api_token) {
+        // The message which is returned when method is completed/failed
         StringBuilder messageToReturn = new StringBuilder();
         int counter = 0;
         while (!show.getThumbnailLink().isEmpty() && !show.getTorrentFile().exists()) {
+            // In case the method is called before SendtoIMGBB.java class has been able to send the image to imgbb
+            // or the method is called before CreateTorrent.java class has been able to finish the torrent,
+            // wait for 300 milliseconds and check again!
             try {
                 if (counter == 100) {
-                    // If 30 seconds have been waited -> break
+                    // If 30 seconds have been waited, something must have gone wrong -> break from method
                     messageToReturn.append("ERROR! Unable to locate thumbnail picture and/or torrent file, will not attempt to send them to *****.");
                     return messageToReturn.toString();
                 }
@@ -59,9 +72,12 @@ public class SendToSite {
             }
         }
 
+        // You can read more about the following replaces from README.md -> Guide -> Tips
+        // Replaces $FILENAME with the actual file name in title
         String builtTitle = show.getTitle().replaceAll("\\$FILENAME", show.getFileName());
+        // Adds line break
         String builtDescription = show.getDescription().replaceAll("\n", "<br>");
-
+        // Replaces $FILENAME with the actual file name in description
         builtDescription = builtDescription.replaceAll("\\$FILENAME", show.getFileName());
 
         // Matches first 20200815 ; 200815 ; 2020-08-15 ; 2020.08.15
@@ -88,13 +104,13 @@ public class SendToSite {
             builtDescription = builtDescription.replaceAll("\\$#", matcher3.group());
         }
 
-        if (!show.getThumbnailLink().isEmpty()) {
-            builtDescription = builtDescription + "<br><br>[img]" + show.getThumbnailLink() + "[/img]";
-        }
+        // Adds image to the description
+        builtDescription = builtDescription + "<br><br>[img]" + show.getThumbnailLink() + "[/img]";
 
         Unirest.config().reset();
         Unirest.config().socketTimeout(2000).connectTimeout(5000);
 
+        // Send the torrent along with all the information to the site
         HttpResponse<String> response = Unirest.post("*****/api/torrents/upload?api_token=" + api_token)
                 .field("torrent", show.getTorrentFile())
                 .field("nfo", "")
@@ -118,23 +134,28 @@ public class SendToSite {
 
         messageToReturn.append(response.getBody() + "\n");
 
+        // Parse the response with regex to find the torrent download link
         String sone = response.getBody();
         Pattern pattern = Pattern.compile("https:.+?(?=\")");
         Matcher matcher = pattern.matcher(sone);
 
         if (matcher.find()) {
+            // If torrent download link is found, change the link into readable format
             String oldlink = matcher.group();
             String newlink = oldlink.replaceAll("\\\\", "");
 
+            // Download the torrent from the site and give it a correct name
             File result = Unirest.get(newlink)
                     .asFile(show.getTorrentFile().getParent() + "\\" + "[******]" + builtTitle.replaceAll(" ", ".") + ".torrent")
                     .getBody();
             messageToReturn.append("Torrent downloaded from *****" + "\n");
         }
 
+        // Delete the old torrent file (which was sent to the site)
         if (show.getTorrentFile().delete()) {
             messageToReturn.append("Old torrent file deleted" + "\n");
         }
+        // Delete the thumbnail file (which was sent to imgbb)
         if (show.getThumbnailFile().delete()) {
             messageToReturn.append("Thumbnail deleted from PC" + "\n");
         }
@@ -144,7 +165,7 @@ public class SendToSite {
 
     /*public static void main(String []args) {
 
-        File torrentFile = new File("C:\\Users\\Kasutaja\\Downloads\\Variety\\Up\\200801 aaa.mp4.torrent");
+        File torrentFile = new File("C:\\Users\\Kasutaja\\Downloads\\200801 aaa.mp4.torrent");
 
         System.out.println(torrentFile.exists());
 
@@ -152,7 +173,7 @@ public class SendToSite {
         HttpResponse<String> response = Unirest.post("****")
                 .field("torrent", torrentFile)
                 .field("nfo", "")
-                .field("name", "Hamachan ga! testtest")
+                .field("name", "Hama testtest")
                 .field("description", "Encoded 720p with CMs cut out.")
                 .field("mediainfo", "General\n" +
                         "    Complete name                            : Files\\\\***.mp4\n" +
@@ -216,10 +237,10 @@ public class SendToSite {
                 .field("category_id", "2")
                 .field("type_id", "6")
                 .field("resolution_id", "5")
-                .field("user_id", "3144")
-                .field("tmdb", "106408")
-                .field("imdb", "5712614")
-                .field("tvdb", "385178")
+                .field("user_id", "0")
+                .field("tmdb", "0")
+                .field("imdb", "0")
+                .field("tvdb", "0")
                 .field("mal", "0")
                 .field("igdb", "0")
                 .field("anonymous", "0")
@@ -238,7 +259,7 @@ public class SendToSite {
         String newlink = oldlink.replaceAll("\\\\", "");
 
         File result = Unirest.get(newlink)
-                .asFile("C:\\Users\\Kasutaja\\Downloads\\Variety\\Up\\New folder\\aaa.torrent")
+                .asFile("C:\\Users\\Kasutaja\\Downloads\\aaa.torrent")
                 .getBody();
 
 
