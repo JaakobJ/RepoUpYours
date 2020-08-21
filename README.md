@@ -7,6 +7,8 @@ An application with a GUI which uses a SQLite database to store information abou
 4. Uploads the thumbnail to imgbb and gets a link to the image.
 5. Uploads the torrent along with all the information and thumbnail to a hosting site.
 
+The code can be found in [src/main/java/GUI/](https://github.com/JaakobJ/RepoUpYours/tree/master/src/main/java/GUI) and the main class is [App.java](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/App.java) .
+
 ### Testing the program
 
 You can find a zip file with a working jar in here: [Up_Yours_jar.zip](https://github.com/JaakobJ/RepoUpYours/blob/master/Up_Yours_jar.zip) . Everything necessary for opening the program is inside. Just extract it to a new folder and open it with Up Yours.jar (*in case you have a 32-bit system, you have to replace jlibtorrent-1.2.8.0.dll file. You can download the 32-bit one [here](https://mega.nz/file/RDACyAyA#VpYjSdetEcxgD0BaYXfMdzdX7k86du8TTOxjf4yrw1Y)*). The Up Yours.jar has been tested with jre1.8.0_241 (Java Version 8 Update 241). The 5th part (*Uploads the torrent along with...*) does not work with this .jar. That part has been intentionally commented out here: [src/main/java/GUI/App.java line 316](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/App.java#L316). 
