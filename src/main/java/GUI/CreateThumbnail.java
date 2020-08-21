@@ -9,20 +9,23 @@ public class CreateThumbnail {
         String videoFilePath = show.getAbsolutePath();
         String videoFileName = show.getFileName();
 
+        String extension = show.getExtension();
+
         if (show.isFolder()) {
             videoFilePath = show.getInsideFolderVideoFile().getAbsolutePath();
             String nameWithExtension = show.getInsideFolderVideoFile().getName();
             String[] tokens = nameWithExtension.split("\\.(?=[^\\.]+$)");
             videoFileName = tokens[0];
+            extension = tokens[1];
         }
 
-        String fontSize = "14";
-        if (show.getExtension().equals("ts")) {
+        String fontSize = "12";
+        if (extension.equals("ts")) {
             fontSize = "10";
         }
 
         Runtime rt = Runtime.getRuntime();
-        Process pr = rt.exec("\"" +  System.getProperty("user.dir") + "\\lib\\mtn-win32\\bin\\mtn.exe\" -f \"" + System.getProperty("user.dir") + "\\lib\\mtn-win32\\bin\\meiryo.ttc\" -F FFFFFF:" + fontSize + ":meiryo.ttc:FFFFFF:000000:13 -k 272727 -L 4:2 -c 4 -r 4 -h 140 -g 5 -P -O \"" + show.getActualThisFile().getParent() + "\" \"" + videoFilePath + "\"");
+        Process pr = rt.exec("\"" +  System.getProperty("user.dir") + "\\lib\\mtn-win32\\bin\\mtn.exe\" -f \"" + System.getProperty("user.dir") + "\\lib\\mtn-win32\\bin\\meiryo.ttc\" -F FFFFFF:" + fontSize + ":meiryo.ttc:FFFFFF:000000:11 -k 272727 -L 4:2 -c 4 -r 4 -h 140 -g 5 -P -O \"" + show.getActualThisFile().getParent() + "\" \"" + videoFilePath + "\"");
 
         show.setThumbnailFile(new File(show.getActualThisFile().getParent() + "\\" + videoFileName + "_s.jpg"));
     }

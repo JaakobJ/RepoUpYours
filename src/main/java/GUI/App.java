@@ -217,7 +217,7 @@ public class App {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    UpdateFileTable(getSourceFolderPathFromDB()); // Need to change where the path comes!
+                    UpdateFileTable(getSourceFolderPathFromDB());
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                     StringWriter sw = new StringWriter();
