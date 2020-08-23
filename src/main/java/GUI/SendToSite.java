@@ -49,13 +49,13 @@ public class SendToSite {
         put("Other", "10");
     }};
 
-    // Method which sends the all the DataHelpers information to "a site" and downloads the torrent in return
+    // Method which sends all the DataHelpers' information to "a site" and downloads the torrent in return
     // The method returns the message received from the site
     public String send(DataHelper show, String user_id, String api_token) {
         // The message which is returned when method is completed/failed
         StringBuilder messageToReturn = new StringBuilder();
         int counter = 0;
-        while (!show.getThumbnailLink().isEmpty() && !show.getTorrentFile().exists()) {
+        while (show.getThumbnailLink().isEmpty() || !show.getTorrentFile().exists()) {
             // In case the method is called before SendtoIMGBB.java class has been able to send the image to imgbb
             // or the method is called before CreateTorrent.java class has been able to finish the torrent,
             // wait for 300 milliseconds and check again!
