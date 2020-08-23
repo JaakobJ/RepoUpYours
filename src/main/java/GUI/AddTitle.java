@@ -48,7 +48,7 @@ public class AddTitle {
         titleJTable.getTableHeader().setReorderingAllowed(false);
 
         // Fill the table
-        UpdateTable(statement);
+        updateTable(statement);
 
         titleJTable.getSelectionModel().addListSelectionListener(new ListSelectionListener(){
             public void valueChanged(ListSelectionEvent event) {
@@ -93,7 +93,8 @@ public class AddTitle {
                                 + "WHERE showname=" + "'" + addTitleTextField.getText().replaceAll("'", "''") + "."
                                 + addExtensionTextField.getText().replaceAll("'", "''") + "';");
 
-                        UpdateTable(statement);
+                        // Update table, so the new addition can be seen
+                        updateTable(statement);
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                     }
@@ -113,8 +114,8 @@ public class AddTitle {
                         // Delete the show from database
                         statement.executeUpdate("DELETE FROM shows WHERE showname=="
                                 + "'" + addTitleTextField.getText().replaceAll("'", "''") + "." + addExtensionTextField.getText().replaceAll("'", "''") + "';");
-                        // Update table, so the new addition can be seen
-                        UpdateTable(statement);
+                        // Update table, so the new the changes can be seen
+                        updateTable(statement);
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                     }
@@ -138,7 +139,7 @@ public class AddTitle {
                                     + "SELECT '" + addTitleTextField.getText().replaceAll("'", "''") + "." + addExtensionTextField.getText().replaceAll("'", "''") + "', description, category_id, type_id, resolution_id, tmdb, imdb, tvdb, mal, igdb, anonymous, stream, sd, internal, thumbnail, screenshots, name "
                                     + "FROM shows WHERE showname='" + titleJTable.getValueAt(titleJTable.getSelectedRow(), 0).toString().replaceAll("'", "''") + "." + titleJTable.getValueAt(titleJTable.getSelectedRow(), 1).toString().replaceAll("'", "''") + "';");
                             // Update table, so the new addition can be seen
-                            UpdateTable(statement);
+                            updateTable(statement);
                         } catch (SQLException throwables) {
                             throwables.printStackTrace();
                         }
@@ -149,12 +150,12 @@ public class AddTitle {
     }
 
     // Method to update the table
-    private void UpdateTable(Statement statement) throws SQLException {
+    private void updateTable(Statement statement) throws SQLException {
         tableModel.setRowCount(0); // Empties table
 
         Object rowData[] = new Object[2];
 
-        // List all the show names from databse and add them to the table
+        // List all the show names from database and add them to the table
         ResultSet rs = statement.executeQuery("select showname from shows");
         while(rs.next())
         {

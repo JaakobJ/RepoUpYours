@@ -15,6 +15,7 @@ import java.util.Map;
 public class CreateTorrent {
 
     // Method which creates a torrent file out of a video file/folder and stores the torrent file in DataHelper
+    // https://programtalk.com/java-api-usage-examples/com.frostwire.jlibtorrent.Entry/
     public void createTorrent(DataHelper upFile) throws IOException {
         File torrentFile = new File(upFile.getActualThisFile().getParent() + "\\" + "tempname" + ".torrent");
 

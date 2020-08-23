@@ -24,7 +24,7 @@ public class Settings {
     private JFileChooser fc;
 
     public Settings(final Statement statement, final JFrame frame) throws SQLException {
-        uploadPathTextField.setEditable(false); // Disables Upload Path Text field editing
+        uploadPathTextField.setEditable(false); // Disables uploadPathTextField editing
 
         // Get Upload path, User ID, API Token and imgbb API Token from database
         ResultSet rs = statement.executeQuery("select * from settings where id=0");

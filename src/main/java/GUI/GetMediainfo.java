@@ -10,12 +10,12 @@ import java.nio.charset.StandardCharsets;
 // The methods in the class are using class DataHelper.java
 public class GetMediainfo {
 
-    // Method gets mediainfo about a video file and adds that mediainfo to the DataHelper
+    // Method gets mediainfo about a video file and adds that mediainfo into the DataHelper
     public void addMediainfoToDataHelper(DataHelper show) throws IOException {
         // Find the absolute path to the video file
         String videoFilePath = show.getAbsolutePath();
         if (show.isFolder()) {
-            // If show is a folder, get an absolute path to the video file inside the folder
+            // If show is a folder, get the absolute path to the video file inside the folder
             videoFilePath = show.getInsideFolderVideoFile().getAbsolutePath();
         }
 
@@ -30,7 +30,7 @@ public class GetMediainfo {
         while((line=input.readLine()) != null) {
             if (line.contains("Service name")) {
                 // Some raw video files have "too much"/unnecessary information which upload sites do not want to parse (can cause errors).
-                // If we have read all the important information and a video file has the unnecessary, we stop.
+                // If we have read all the important information and the video file contains that unnecessary information, we stop.
                 break;
             }
             mediainfo.append(line + "\n");

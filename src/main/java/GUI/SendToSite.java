@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 // The class is used by App.java
 // The methods in the class are using class DataHelper.java
 public class SendToSite {
-    // Category dictionary, since the site has numbers for different categories.
+    // Category dictionary, since the site has numbers for different categories
     Map<String, String> categoryMap = new HashMap<String, String>() {{
         put("Movies", "1");
         put("TV", "2");
@@ -24,7 +24,7 @@ public class SendToSite {
         put("Anime Shows", "9");
     }};
 
-    // Type dictionary, since the site has numbers for different types.
+    // Type dictionary, since the site has numbers for different types
     Map<String, String> typeMap = new HashMap<String, String>() {{
         put("BluRay", "3");
         put("DVD", "1");
@@ -35,7 +35,7 @@ public class SendToSite {
         put("Re-encode", "15");
     }};
 
-    // Resolution dictionary, since the site has numbers for different resolutions.
+    // Resolution dictionary, since the site has numbers for different resolutions
     Map<String, String> resolutionMap = new HashMap<String, String>() {{
         put("4320p", "1");
         put("2160p", "2");

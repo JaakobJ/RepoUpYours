@@ -46,7 +46,7 @@ public class GettingFiles {
         return answer;
     }
 
-    // Method to check whether the directory contains allowed video file type
+    // Method to check whether the directory contains a video file of th allowed type
     // If yes, add to list
     private void handleDirectory(File directoryFile) {
         File[] atarashiiListOfFiles = directoryFile.listFiles();
@@ -58,7 +58,7 @@ public class GettingFiles {
                 DataHelper atarashiiDataHelper = new DataHelper(directoryFile.getName(), "folder", directoryFile.getAbsolutePath(), directoryFile);
                 // Make sure you can later identify the DataHelper as a folder
                 atarashiiDataHelper.setFolder(true);
-                // Make sure you can find the video file later inside the folder for thumbnail and mediainfo
+                // Make sure you can find the video file later inside the folder for thumbnail and mediainfo creation
                 atarashiiDataHelper.setInsideFolderVideoFile(atarashiiListOfFiles[g]);
                 answer.add(atarashiiDataHelper);
                 break;

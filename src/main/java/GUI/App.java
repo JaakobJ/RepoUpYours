@@ -117,13 +117,13 @@ public class App {
                 if (fileTable.getSelectedRow() != -1) {
                     // When another show is selected in File Table
                     // Save the information of previously selected show
-                    SaveTempInfoIntoDataHelper();
+                    saveTempInfoIntoDataHelper();
                     for (DataHelper show : list) {
                         // Finds the DataHelper which was selected in File Table
                         if (Objects.equals(show.getFileName(), fileTable.getValueAt(fileTable.getSelectedRow(), 0).toString())
                                 && Objects.equals(show.getExtension(), fileTable.getValueAt(fileTable.getSelectedRow(), 2).toString())) {
                             // Display the selected show's information
-                            ShowInfo(show);
+                            showInfo(show);
                             // Change the currently selected show
                             currentlySelectedShow = show;
                             break;
@@ -139,7 +139,7 @@ public class App {
         fileTable.getColumnModel().getColumn(1).setPreferredWidth(125);
         fileTable.getColumnModel().getColumn(2).setPreferredWidth(50);
         // Fill the File Table
-        UpdateFileTable(getSourceFolderPathFromDB());
+        updateFileTable(getSourceFolderPathFromDB());
 
         // Save button
         saveButton.addActionListener(new ActionListener() {
@@ -153,7 +153,7 @@ public class App {
                                 && Objects.equals(show.getExtension(), fileTable.getValueAt(fileTable.getSelectedRow(), 2).toString())) {
                             try {
                                 // Save the updated info into the DataHelper and database
-                                UpdateShow(show);
+                                updateShow(show);
                             } catch (SQLException throwables) {
                                 throwables.printStackTrace();
                                 StringWriter sw = new StringWriter();
@@ -193,7 +193,7 @@ public class App {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Save the information of previously selected show
-                SaveTempInfoIntoDataHelper();
+                saveTempInfoIntoDataHelper();
                 JFrame frame = new JFrame("Add Title");
                 if (fileTable.getSelectedRow() == -1) {
                     // Only when no shows in File Table
@@ -239,8 +239,8 @@ public class App {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    // Update the File Table
-                    UpdateFileTable(getSourceFolderPathFromDB());
+                    // Update File Table
+                    updateFileTable(getSourceFolderPathFromDB());
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                     StringWriter sw = new StringWriter();
@@ -256,11 +256,11 @@ public class App {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Save the information of previously selected show
-                SaveTempInfoIntoDataHelper();
+                saveTempInfoIntoDataHelper();
 
                 // Check if all shows have TMDB ID
                 if (checkForTmdbEntry()) {
-                    // If yes, for every show in the File Table:
+                    // If yes, for every show in File Table:
                     for (DataHelper show : list) {
                         try {
                             messageBoxMessage.append("Creating torrent for file " + show.getFileName() + "." + show.getExtension() + "\n");
@@ -330,7 +330,7 @@ public class App {
             }
         });
 
-        // Log button
+        // Log button (src/main/java/GUI/PopUpMessage.java)
         logButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -345,7 +345,7 @@ public class App {
     }
 
     // Method to update File Table
-    private void UpdateFileTable(String path) throws SQLException {
+    private void updateFileTable(String path) throws SQLException {
 
         tableModel.setRowCount(0); // Empties table
 
@@ -358,12 +358,12 @@ public class App {
         GettingFiles folderFiles = new GettingFiles(path);
         list = folderFiles.getNames();
 
-        // Fill the File Table
+        // Fill File Table
         Object rowData[] = new Object[3];
         for (DataHelper show : list) {
             rowData[0] = show.getFileName();
 
-            // Get all the series names from database and add them to the File Table
+            // Get all the series names from database and add them to File Table
             ResultSet rs = statement.executeQuery("select showname from shows");
             String showname = "";
             String extension = "";
@@ -374,10 +374,10 @@ public class App {
                 extension = tokens[1];
                 if (show.getFileName().toLowerCase().contains(showname.toLowerCase())
                         && show.getExtension().toLowerCase().equals(extension.toLowerCase())) {
-                    // If the file name contains a series name, set that series name as that DataHelper's series name
+                    // If file name contains a series name, set that series name as that DataHelper's series name
                     show.setShortName(showname);
                     // Fill that DataHelper with the information stored in database about that series
-                    FillDBInfo(show);
+                    fillDBInfo(show);
                     break;
                 }
             }
@@ -393,7 +393,7 @@ public class App {
     }
 
     // Method to fill a DataHelper with the information stored in database
-    private void FillDBInfo(DataHelper show) throws SQLException {
+    private void fillDBInfo(DataHelper show) throws SQLException {
         ResultSet rs = statement.executeQuery("select * from shows where showname = "
                 + "'" + show.getShortName() + "." + show.getExtension() + "'");
         show.setDescription(rs.getString("description"));
@@ -414,7 +414,7 @@ public class App {
     }
 
     // Method to display the information of a selected show
-    private void ShowInfo(DataHelper show) {
+    private void showInfo(DataHelper show) {
         titleTextField.setText(show.getTitle());
         categoryComboBox.setSelectedIndex(Arrays.asList(categoryList).indexOf(show.getCategory()));
         typeComboBox.setSelectedIndex(Arrays.asList(typeList).indexOf(show.getType()));
@@ -443,16 +443,16 @@ public class App {
     }
 
     // Method to save the updated info into DataHelper and database
-    private void UpdateShow(DataHelper show) throws SQLException {
+    private void updateShow(DataHelper show) throws SQLException {
         if (!show.getShortName().isEmpty()) {
             // If a show has a Series Name, update DataHelper and database
-            UpdateDataHelper(show);
-            UpdateDBShow(show);
+            updateDataHelper(show);
+            updateDBShow(show);
         }
     }
 
     // Method to update DataHelper with updated info
-    private void UpdateDataHelper(DataHelper show) {
+    private void updateDataHelper(DataHelper show) {
         show.setTitle(titleTextField.getText());
         show.setCategory(categoryComboBox.getSelectedItem().toString());
         show.setType(typeComboBox.getSelectedItem().toString());
@@ -483,7 +483,7 @@ public class App {
     }
 
     // Method to update database with updated info
-    private void UpdateDBShow(DataHelper show) throws SQLException {
+    private void updateDBShow(DataHelper show) throws SQLException {
         // anonymous, stream optimized, sd content and internal are stored in database as 1 (true) and 0 (false)
         int anonymous = show.isAnonymous() ? 1 : 0;
         int stream = show.isStreamOptimized() ? 1 : 0;
@@ -506,22 +506,22 @@ public class App {
     }
 
     // Method to save the information of previously selected show
-    private void SaveTempInfoIntoDataHelper() {
+    private void saveTempInfoIntoDataHelper() {
         if (currentlySelectedShow != null) {
             // If there is a currentlySelectedShow, save the left information into that DataHelper
-            UpdateDataHelper(currentlySelectedShow);
+            updateDataHelper(currentlySelectedShow);
         }
     }
 
     // Method to create database connection
     private void createDBConnection() {
         try {
-            // create a database connection
+            // Create a database connection
             connection = DriverManager.getConnection("jdbc:sqlite:database.db");
             statement = connection.createStatement();
             statement.setQueryTimeout(5);
         } catch (SQLException e) {
-            // if the error message is "out of memory",
+            // If the error message is "out of memory",
             // it probably means no database file is found
             System.err.println(e.getMessage());
             StringWriter sw = new StringWriter();
@@ -531,7 +531,7 @@ public class App {
         }
     }
 
-    // Method to get the source folder (the folder wich is specified in Settings) path from database
+    // Method to get the source folder (the folder which is specified in Settings) path from database
     private String getSourceFolderPathFromDB() throws SQLException {
         ResultSet rs = statement.executeQuery("select path from settings where id=0");
         return rs.getString("path");
@@ -555,7 +555,7 @@ public class App {
                 message.append(show.getFileName() + "." + show.getExtension() + "\n");
             }
 
-            // (src/main/java/GUI/PopUpMessage.java)
+            // PopUpMessage (src/main/java/GUI/PopUpMessage.java)
             JFrame frame = new JFrame("Shows missing TMDB ID number.");
             frame.setContentPane(new PopUpMessage(message.toString()).popUpPanel);
             frame.pack();
@@ -566,7 +566,7 @@ public class App {
         return faultyShows.isEmpty();
     }
 
-    // The Main class which opens the GUI
+    // The main class which opens the GUI
     public static void main(String[] args) throws SQLException {
         JFrame frame = new JFrame("Up Yours");
         frame.setContentPane(new App().mainPanel);
