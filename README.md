@@ -12,7 +12,7 @@ The code can be found in [src/main/java/GUI/](https://github.com/JaakobJ/RepoUpY
 
 ### Testing the program
 
-You can find a zip file with a working jar in here: [Up_Yours_jar.zip](https://github.com/JaakobJ/RepoUpYours/blob/master/Up_Yours_jar.zip) . Everything necessary for opening the program is inside. Just extract it to a new folder and open it with Up Yours.jar (*in case you have a 32-bit system, you have to replace jlibtorrent-1.2.8.0.dll file. You can download the 32-bit one [here](https://mega.nz/file/RDACyAyA#VpYjSdetEcxgD0BaYXfMdzdX7k86du8TTOxjf4yrw1Y)*). The Up Yours.jar has been tested with jre1.8.0_241 (Java Version 8 Update 241). The 6th part (*Uploads the torrent along with...*) does not work with this .jar. That part has been intentionally commented out here: [src/main/java/GUI/App.java line 315](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/App.java#L315). 
+You can find a zip file with a working jar in here: [Up_Yours_jar.zip](https://github.com/JaakobJ/RepoUpYours/blob/master/Up_Yours_jar.zip) . Everything necessary for opening the program is inside. Just extract it to a new folder and open it with Up Yours.jar (*in case you have a 32-bit system, you have to replace jlibtorrent-1.2.8.0.dll file. You can download the 32-bit one [here](https://mega.nz/file/RDACyAyA#VpYjSdetEcxgD0BaYXfMdzdX7k86du8TTOxjf4yrw1Y)*). The Up Yours.jar has been tested with jre1.8.0_241 (Java Version 8 Update 241). The 6th part (*Uploads the torrent along with...*) does not work with this .jar. That part has been intentionally commented out here: [src/main/java/GUI/App.java line 316](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/App.java#L316). 
 
 The program can be tested after inserting two values in Settings: "Upload path" which is the folder containing your video files and "imgbb API Token" which you can get for free when registering at [imgbb](https://imgbb.com/). Then insert a random integer > 1 for TMDB ID and press "Upload all". Torrent file and thumbnails will be created to the same folder where your video files are located and the thumbnail is uploaded to your imgbb account.
 
@@ -22,7 +22,7 @@ Database can be tested when first Adding a series, then Reloading and by inserti
 
 ### Using in IDE
 
-For using the database, [src/main/java/lib/sqlite-jdbc-3.30.1.jar](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/lib/sqlite-jdbc-3.30.1.jar) needs to be added as a dependency. The database file is [database.db](https://github.com/JaakobJ/RepoUpYours/blob/master/database.db) . Database needs to be linked in src/main/java/GUI/App.java [line 519](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/App.java#L519). 
+For using the database, [src/main/java/lib/sqlite-jdbc-3.30.1.jar](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/lib/sqlite-jdbc-3.30.1.jar) needs to be added as a dependency. The database file is [database.db](https://github.com/JaakobJ/RepoUpYours/blob/master/database.db) . Database needs to be linked in src/main/java/GUI/App.java [line 520](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/App.java#L520). 
 
 For thumbnail creation, [lib/mtn-win32/bin/mtn.exe](https://github.com/JaakobJ/RepoUpYours/blob/master/lib/mtn-win32/bin/mtn.exe) needs to be linked in src/main/java/GUI/CreateThumbnail.java [line 37](https://github.com/JaakobJ/RepoUpYours/blob/master/src/main/java/GUI/CreateThumbnail.java#L37) (two places on the same line). mtn.exe is used with Java Runtime/Process.
 
