@@ -9,7 +9,7 @@ import java.io.IOException;
 public class CreateThumbnail {
 
     // Method which creates a thumbnail out of a video file and stores the thumbnail file in DataHelper
-    public void create(DataHelper show) throws IOException {
+    public void create(DataHelper show) throws IOException, InterruptedException {
         String videoFilePath = show.getAbsolutePath();
         String videoFileName = show.getFileName();
 
@@ -35,6 +35,8 @@ public class CreateThumbnail {
         Runtime rt = Runtime.getRuntime();
         // Command Line command to create a thumbnail out of a video file with Movie Thumbnailer (mtn)
         Process pr = rt.exec("\"" +  System.getProperty("user.dir") + "\\lib\\mtn-win32\\bin\\mtn.exe\" -f \"" + System.getProperty("user.dir") + "\\lib\\mtn-win32\\bin\\meiryo.ttc\" -F FFFFFF:" + fontSize + ":meiryo.ttc:FFFFFF:000000:11 -k 272727 -L 4:2 -c 4 -r 4 -h 140 -g 5 -P -O \"" + show.getActualThisFile().getParent() + "\" \"" + videoFilePath + "\"");
+
+        pr.waitFor();
 
         show.setThumbnailFile(new File(show.getActualThisFile().getParent() + "\\" + videoFileName + "_s.jpg"));
     }

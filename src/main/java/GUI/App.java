@@ -194,7 +194,7 @@ public class App {
             public void actionPerformed(ActionEvent e) {
                 // Save the information of previously selected show
                 saveTempInfoIntoDataHelper();
-                JFrame frame = new JFrame("Add Title");
+                JFrame frame = new JFrame("Add Series");
                 if (fileTable.getSelectedRow() == -1) {
                     // Only when no shows in File Table
                     DataHelper atarashii = new DataHelper("", "", "", new File(""));
@@ -291,7 +291,7 @@ public class App {
                             // Create thumbnail
                             createThumbnail.create(show);
                             messageBoxMessage.append("Thumbnail created for file " + show.getFileName() + "." + show.getExtension() + "\n");
-                        } catch (IOException ioException) {
+                        } catch (IOException | InterruptedException ioException) {
                             ioException.printStackTrace();
                             StringWriter sw = new StringWriter();
                             PrintWriter pw = new PrintWriter(sw);
@@ -311,7 +311,6 @@ public class App {
                         }
                         try {
                             ResultSet rs = statement.executeQuery("select * from settings where id=0");
-                            // Upload the torrent along with all the information to "a site"
                             // This is currently disabled as it's not possible to test this without having an account on that site
                             //messageBoxMessage.append(sendToSite.send(show, rs.getString("user_id"), rs.getString("api_token")));
                         } catch (SQLException throwables) {

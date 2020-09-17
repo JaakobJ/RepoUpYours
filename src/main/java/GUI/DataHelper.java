@@ -32,10 +32,10 @@ public class DataHelper {
     private String mediainfo;
 
     private File actualThisFile;
-    private File torrentFile;
+    private volatile File torrentFile;
     private volatile File thumbnailFile;
 
-    private String thumbnailLink;
+    private volatile String thumbnailLink;
 
     private boolean folder;
     private File insideFolderVideoFile;

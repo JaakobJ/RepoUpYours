@@ -17,6 +17,7 @@ public class SendToIMGBB {
     public String send(DataHelper show, String imgbb_api) {
         // The message which is returned when method is completed/failed
         StringBuilder messageToReturn = new StringBuilder();
+
         int counter = 0;
         while (!show.getThumbnailFile().exists()) {
             // In case the method is called before CreateThumbnail.java class has been able to finish the thumbnail
@@ -24,7 +25,7 @@ public class SendToIMGBB {
             try {
                 if (counter == 100) {
                     // If 30 seconds have been waited, something must have gone wrong -> break from method
-                    messageToReturn.append("ERROR! Unable to locate thumbnail picture, will not attempt to send it to imgbb.");
+                    messageToReturn.append("ERROR! Unable to locate thumbnail picture, will not attempt to send it to imgbb.\n");
                     return messageToReturn.toString();
                 }
                 Thread.sleep(300);

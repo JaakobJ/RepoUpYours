@@ -54,6 +54,7 @@ public class SendToSite {
     public String send(DataHelper show, String user_id, String api_token) {
         // The message which is returned when method is completed/failed
         StringBuilder messageToReturn = new StringBuilder();
+
         int counter = 0;
         while (show.getThumbnailLink().isEmpty() || !show.getTorrentFile().exists()) {
             // In case the method is called before SendtoIMGBB.java class has been able to send the image to imgbb
@@ -62,7 +63,7 @@ public class SendToSite {
             try {
                 if (counter == 100) {
                     // If 30 seconds have been waited, something must have gone wrong -> break from method
-                    messageToReturn.append("ERROR! Unable to locate thumbnail picture and/or torrent file, will not attempt to send them to *****.");
+                    messageToReturn.append("ERROR! Unable to locate thumbnail picture and/or torrent file, will not attempt to send them to *****.\n");
                     return messageToReturn.toString();
                 }
                 Thread.sleep(300);
@@ -83,25 +84,36 @@ public class SendToSite {
         // Matches first 20200815 ; 200815 ; 2020-08-15 ; 2020.08.15
         Pattern pattern1 = Pattern.compile("((\\d){8}|(\\d{6})|(\\d{4}-\\d{2}-\\d{2})|(\\d{4}\\.\\d{2}\\.\\d{2}))");
         Matcher matcher1 = pattern1.matcher(show.getFileName());
-        if (matcher1.find()) {
-            builtTitle = builtTitle.replaceAll("\\$DATE", matcher1.group());
-            builtDescription = builtDescription.replaceAll("\\$DATE", matcher1.group());
+        if (matcher1.find() && (show.getTitle().contains("$DATE") || show.getDescription().contains("$DATE"))) {
+            String formattedDate = formatDate(show.getFileName());
+            builtTitle = builtTitle.replaceAll("\\$DATE", formattedDate);
+            builtDescription = builtDescription.replaceAll("\\$DATE", formattedDate);
         }
 
-        // Matches first S01E01 ; EP01 ; Ep01 ; E01 (there can be however many numbers you want)
-        Pattern pattern2 = Pattern.compile("((S\\d+E\\d+)|(E[Pp]\\d+)|(E\\d+))");
+        // Matches first EP01 ; Ep01 ; E01 (there can be however many numbers you want)
+        Pattern pattern2 = Pattern.compile("((E[Pp]\\d+)|(E\\d+))");
         Matcher matcher2 = pattern2.matcher(show.getFileName());
-        if (matcher2.find()) {
-            builtTitle = builtTitle.replaceAll("\\$EP", matcher2.group());
-            builtDescription = builtDescription.replaceAll("\\$EP", matcher2.group());
+        if (matcher2.find() && (show.getTitle().contains("$EP") || show.getDescription().contains("$EP"))) {
+            String formattedEP = formatEP(show.getFileName());
+            builtTitle = builtTitle.replaceAll("\\$EP", formattedEP);
+            builtDescription = builtDescription.replaceAll("\\$EP", formattedEP);
+        }
+
+        // Matches first S01E01 ; Season 1 EP01 ; Season 1 Ep01 ; Season 1 E01 (there can be however many numbers you want)
+        Pattern pattern4 = Pattern.compile("((S\\d+E\\d+)|Season \\d+ (E[Pp]\\d+)|Season \\d+ (E\\d+))");
+        Matcher matcher4 = pattern4.matcher(show.getFileName());
+        if (matcher4.find() && (show.getTitle().contains("$S&E") || show.getDescription().contains("$S&E"))) {
+            String formattedSeasonEP = formatSeasonEP(show.getFileName());
+            builtTitle = builtTitle.replaceAll("\\$S&E", formattedSeasonEP);
+            builtDescription = builtDescription.replaceAll("\\$S&E", formattedSeasonEP);
         }
 
         // Matches #01 ; #001 (there can be however many numbers you want)
         Pattern pattern3 = Pattern.compile("#\\d+");
         Matcher matcher3 = pattern3.matcher(show.getFileName());
-        if (matcher3.find()) {
-            builtTitle = builtTitle.replaceAll("\\$#", matcher3.group());
-            builtDescription = builtDescription.replaceAll("\\$#", matcher3.group());
+        if (matcher3.find() && (show.getTitle().contains("$#")  || show.getDescription().contains("$#"))) {
+            builtTitle = builtTitle.replaceAll("\\$#", matcher3.group().replace("#", "E"));
+            builtDescription = builtDescription.replaceAll("\\$#", matcher3.group().replace("#", "E"));
         }
 
         // Adds image to the description
@@ -130,6 +142,10 @@ public class SendToSite {
                 .field("stream", show.isStreamOptimized() ? "1" : "0")
                 .field("sd", show.isSdContent() ? "1" : "0")
                 .field("internal", show.isInternal() ? "1" : "0")
+                .field("featured", "0")
+                .field("free", "0")
+                .field("doubleup", "0")
+                .field("sticky", "0")
                 .asString();
 
         messageToReturn.append(response.getBody() + "\n");
@@ -148,7 +164,7 @@ public class SendToSite {
             File result = Unirest.get(newlink)
                     .asFile(show.getTorrentFile().getParent() + "\\" + "[******]" + builtTitle.replaceAll(" ", ".") + ".torrent")
                     .getBody();
-            messageToReturn.append("Torrent downloaded from *****" + "\n");
+            messageToReturn.append("Torrent downloaded from *****.club" + "\n");
         }
 
         // Delete the old torrent file (which was sent to the site)
@@ -161,6 +177,79 @@ public class SendToSite {
         }
 
         return(messageToReturn.toString());
+    }
+
+    private String formatDate(String filename) {
+        Pattern pattern1 = Pattern.compile("(\\d){8}"); // 20200815
+        Matcher matcher1 = pattern1.matcher(filename);
+        if (matcher1.find()) {
+            return matcher1.group().substring(0, 4) + "-" + matcher1.group().substring(4, 6) + "-"
+                    + matcher1.group().substring(6, 8);
+        }
+        Pattern pattern2 = Pattern.compile("(\\d{6})"); // 200815
+        Matcher matcher2 = pattern2.matcher(filename);
+        if (matcher2.find()) {
+            return "20" + matcher2.group().substring(0, 2) + "-" + matcher2.group().substring(2, 4) + "-"
+                    + matcher2.group().substring(4, 6);
+        }
+        Pattern pattern3 = Pattern.compile("(\\d{4}-\\d{2}-\\d{2})"); // 2020-08-15
+        Matcher matcher3 = pattern3.matcher(filename);
+        if (matcher3.find()) {
+            return matcher3.group();
+        }
+        Pattern pattern4 = Pattern.compile("(\\d{4}\\.\\d{2}\\.\\d{2})"); // 2020.08.15
+        Matcher matcher4 = pattern4.matcher(filename);
+        if (matcher4.find()) {
+            return matcher4.group().replaceAll("\\.", "-");
+        }
+        return "";
+    }
+
+    private String formatEP(String filename) {
+        Pattern pattern1 = Pattern.compile("(E[Pp]\\d+)"); // EP01 & Ep01
+        Matcher matcher1 = pattern1.matcher(filename);
+        if (matcher1.find()) {
+            return "S01" + matcher1.group().replace("P", "").replace("p", "");
+        }
+        Pattern pattern2 = Pattern.compile("(E\\d+)"); // E01
+        Matcher matcher2 = pattern2.matcher(filename);
+        if (matcher2.find()) {
+            return "S01" + matcher2.group();
+        }
+        return "";
+    }
+
+    private String formatSeasonEP(String filename) {
+        Pattern pattern1 = Pattern.compile("(S\\d+E\\d+)"); // S01E01
+        Matcher matcher1 = pattern1.matcher(filename);
+        if (matcher1.find()) {
+            return matcher1.group();
+        }
+        Pattern pattern2 = Pattern.compile("Season \\d+ (E[Pp]\\d+)"); // Season 1 EP01 & Season 1 Ep01
+        Matcher matcher2 = pattern2.matcher(filename);
+        if (matcher2.find()) {
+            String returnWord = matcher2.group();
+            if (returnWord.charAt(8) == ' ') {
+                returnWord = returnWord.replace("Season ", "S0");
+            }
+            else {
+                returnWord = returnWord.replace("Season ", "S");
+            }
+            return returnWord.replace(" EP", "E").replace(" Ep", "E");
+        }
+        Pattern pattern3 = Pattern.compile("Season \\d+ (E\\d+)"); // Season 1 E01
+        Matcher matcher3 = pattern3.matcher(filename);
+        if (matcher3.find()) {
+            String returnWord = matcher3.group();
+            if (returnWord.charAt(8) == ' ') {
+                returnWord = returnWord.replace("Season ", "S0");
+            }
+            else {
+                returnWord = returnWord.replace("Season ", "S");
+            }
+            return returnWord.replace(" E", "E");
+        }
+        return "";
     }
 
     /*public static void main(String []args) {
