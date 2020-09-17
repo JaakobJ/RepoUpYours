@@ -162,9 +162,9 @@ public class SendToSite {
 
             // Download the torrent from the site and give it a correct name
             File result = Unirest.get(newlink)
-                    .asFile(show.getTorrentFile().getParent() + "\\" + "[******]" + builtTitle.replaceAll(" ", ".") + ".torrent")
+                    .asFile(show.getTorrentFile().getParent() + "\\" + "[*****]" + builtTitle.replaceAll(" ", ".") + ".torrent")
                     .getBody();
-            messageToReturn.append("Torrent downloaded from *****.club" + "\n");
+            messageToReturn.append("Torrent downloaded from *****" + "\n");
         }
 
         // Delete the old torrent file (which was sent to the site)

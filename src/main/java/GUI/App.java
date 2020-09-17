@@ -311,6 +311,7 @@ public class App {
                         }
                         try {
                             ResultSet rs = statement.executeQuery("select * from settings where id=0");
+                            // Upload the torrent along with all the information to "a site"
                             // This is currently disabled as it's not possible to test this without having an account on that site
                             //messageBoxMessage.append(sendToSite.send(show, rs.getString("user_id"), rs.getString("api_token")));
                         } catch (SQLException throwables) {
