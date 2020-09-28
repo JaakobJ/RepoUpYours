@@ -42,7 +42,7 @@ public class test2 {
         System.out.println(formatDate(word3));
         System.out.println(formatDate(word4));*/
 
-        String word1 = "EP123";
+        /*String word1 = "EP123";
         String word2 = "Ep01";
         String word3 = "E22";
 
@@ -58,7 +58,7 @@ public class test2 {
         System.out.println(formatSeasonEP(word4));
         System.out.println(formatSeasonEP(word5));
         System.out.println(formatSeasonEP(word6));
-        System.out.println(formatSeasonEP(word7));
+        System.out.println(formatSeasonEP(word7));*/
     }
 
     private static String formatDate(String filename) {

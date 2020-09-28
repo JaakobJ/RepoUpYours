@@ -34,6 +34,7 @@ public class SendToIMGBB {
                 interruptedException.printStackTrace();
             }
         }
+        messageToReturn.append("Thumbnail created for file " + show.getFileName() + "." + show.getExtension() + "\n");
 
         Unirest.config().reset();
         Unirest.config().socketTimeout(2000).connectTimeout(5000);

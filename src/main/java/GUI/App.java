@@ -290,7 +290,6 @@ public class App {
                             messageBoxMessage.append("Creating thumbnail for file " + show.getFileName() + "." + show.getExtension() + "\n");
                             // Create thumbnail
                             createThumbnail.create(show);
-                            messageBoxMessage.append("Thumbnail created for file " + show.getFileName() + "." + show.getExtension() + "\n");
                         } catch (IOException | InterruptedException ioException) {
                             ioException.printStackTrace();
                             StringWriter sw = new StringWriter();
@@ -324,8 +323,16 @@ public class App {
                     }
                     // Updates Progress Bar
                     progressBar.setStringPainted(true);
-                    progressBar.setValue(100);
-                    progressBar.setString("DONE");
+                    if (messageBoxMessage.toString().contains("ERROR")
+                            || messageBoxMessage.toString().contains("\"success\":false")
+                            || messageBoxMessage.toString().contains("Exception")) {
+                        progressBar.setValue(0);
+                        progressBar.setString("SOMETHING WENT WRONG, CHECK LOG");
+                    }
+                    else {
+                        progressBar.setValue(100);
+                        progressBar.setString("DONE");
+                    }
                 }
             }
         });
@@ -395,7 +402,7 @@ public class App {
     // Method to fill a DataHelper with the information stored in database
     private void fillDBInfo(DataHelper show) throws SQLException {
         ResultSet rs = statement.executeQuery("select * from shows where showname = "
-                + "'" + show.getShortName() + "." + show.getExtension() + "'");
+                + "'" + show.getShortName().replaceAll("'", "''") + "." + show.getExtension().replaceAll("'", "''") + "'");
         show.setDescription(rs.getString("description"));
         show.setCategory(rs.getString("category_id"));
         show.setType(rs.getString("type_id"));
@@ -502,7 +509,7 @@ public class App {
                 + "sd=" + sd + ","
                 + "name=" + "'" + titleTextField.getText().replaceAll("'", "''") + "'"
 
-                + "WHERE showname=" + "'" + show.getShortName() + "." + show.getExtension() + "'");
+                + "WHERE showname=" + "'" + show.getShortName().replaceAll("'", "''") + "." + show.getExtension().replaceAll("'", "''") + "'");
     }
 
     // Method to save the information of previously selected show
