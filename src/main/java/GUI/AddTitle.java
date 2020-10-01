@@ -88,7 +88,7 @@ public class AddTitle {
                                 + "anonymous=" + anonymous + ","
                                 + "stream=" + stream + ","
                                 + "sd=" + sd + ","
-                                + "name=" + "'" + show.getTitle().replaceAll("'", "''") + "'"
+                                + "name=" + "'" + show.getTitle().replaceAll("'", "''") + "' "
 
                                 + "WHERE showname=" + "'" + addTitleTextField.getText().replaceAll("'", "''") + "."
                                 + addExtensionTextField.getText().replaceAll("'", "''") + "';");
