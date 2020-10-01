@@ -5,9 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 // The class which is opened when Settings button is pressed in GUI
 // The class is used by App.java
@@ -23,11 +21,12 @@ public class Settings {
     private JTextField imgbbApiTokenTextField;
     private JFileChooser fc;
 
-    public Settings(final Statement statement, final JFrame frame) throws SQLException {
+    public Settings(final Connection connection, final JFrame frame) throws SQLException {
         uploadPathTextField.setEditable(false); // Disables uploadPathTextField editing
 
         // Get Upload path, User ID, API Token and imgbb API Token from database
-        ResultSet rs = statement.executeQuery("select * from settings where id=0");
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT * FROM settings WHERE id = 0");
         uploadPathTextField.setText(rs.getString("path"));
         userIDtextField.setText(rs.getString("user_id"));
         apiTokenTextField.setText(rs.getString("api_token"));
@@ -70,11 +69,15 @@ public class Settings {
             public void actionPerformed(ActionEvent e) {
                 try {
                     // Save currently selected Upload path, User ID, API Token and imgbb API Token to database
-                    statement.executeUpdate("UPDATE settings SET path=" + "'" + uploadPathTextField.getText().replaceAll("'", "''") + "',"
-                            + "user_id=" + "'" + userIDtextField.getText().replaceAll("'", "''") + "',"
-                            + "api_token=" + "'" + apiTokenTextField.getText().replaceAll("'", "''") + "',"
-                            + "imgbb_api_token=" + "'" + imgbbApiTokenTextField.getText().replaceAll("'", "''") + "'"
-                            + "WHERE id=0");
+                    String updateSettings = "UPDATE settings SET path = ?, user_id = ?, api_token = ?, imgbb_api_token = ? "
+                            + "WHERE id = 0";
+                    PreparedStatement preparedStatement = connection.prepareStatement(updateSettings);
+                    preparedStatement.setString(1, uploadPathTextField.getText());
+                    preparedStatement.setString(2, userIDtextField.getText());
+                    preparedStatement.setString(3, apiTokenTextField.getText());
+                    preparedStatement.setString(4, imgbbApiTokenTextField.getText());
+                    preparedStatement.executeUpdate();
+
                     frame.dispose();
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();

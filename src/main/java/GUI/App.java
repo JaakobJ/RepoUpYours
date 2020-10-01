@@ -9,16 +9,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import java.io.StringWriter;
 import java.io.PrintWriter;
@@ -71,6 +66,7 @@ public class App {
 
     private Connection connection = null;
     private Statement statement = null;
+    private PreparedStatement preparedStatement = null;
 
     // To remember which show is currently selected
     private DataHelper currentlySelectedShow = null;
@@ -174,7 +170,7 @@ public class App {
             public void actionPerformed(ActionEvent e) {
                 JFrame frame = new JFrame("Settings");
                 try {
-                    frame.setContentPane(new Settings(statement, frame).settingsPanel);
+                    frame.setContentPane(new Settings(connection, frame).settingsPanel);
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                     StringWriter sw = new StringWriter();
@@ -199,7 +195,7 @@ public class App {
                     // Only when no shows in File Table
                     DataHelper atarashii = new DataHelper("", "", "", new File(""));
                     try {
-                        frame.setContentPane(new AddTitle(atarashii, statement).addTitlePanel);
+                        frame.setContentPane(new AddTitle(atarashii, connection).addTitlePanel);
                     } catch (SQLException throwables) {
                         throwables.printStackTrace();
                         StringWriter sw = new StringWriter();
@@ -214,7 +210,7 @@ public class App {
                         if (Objects.equals(show.getFileName(), fileTable.getValueAt(fileTable.getSelectedRow(), 0).toString())
                                 && Objects.equals(show.getExtension(), fileTable.getValueAt(fileTable.getSelectedRow(), 2).toString())) {
                             try {
-                                frame.setContentPane(new AddTitle(show, statement).addTitlePanel);
+                                frame.setContentPane(new AddTitle(show, connection).addTitlePanel);
                             } catch (SQLException throwables) {
                                 throwables.printStackTrace();
                                 StringWriter sw = new StringWriter();
@@ -298,7 +294,7 @@ public class App {
                             messageBoxMessage.append(sw.toString());
                         }
                         try {
-                            ResultSet rs = statement.executeQuery("select * from settings where id=0");
+                            ResultSet rs = statement.executeQuery("SELECT * FROM settings WHERE id=0");
                             // Upload the thumbnail to imgbb and receive a link
                             messageBoxMessage.append(sendToIMGBB.send(show, rs.getString("imgbb_api_token")));
                         } catch (SQLException throwables) {
@@ -309,7 +305,7 @@ public class App {
                             messageBoxMessage.append(sw.toString());
                         }
                         try {
-                            ResultSet rs = statement.executeQuery("select * from settings where id=0");
+                            ResultSet rs = statement.executeQuery("SELECT * FROM settings WHERE id=0");
                             // Upload the torrent along with all the information to "a site"
                             // This is currently disabled as it's not possible to test this without having an account on that site
                             //messageBoxMessage.append(sendToSite.send(show, rs.getString("user_id"), rs.getString("api_token")));
@@ -371,7 +367,7 @@ public class App {
             rowData[0] = show.getFileName();
 
             // Get all the series names from database and add them to File Table
-            ResultSet rs = statement.executeQuery("select showname from shows");
+            ResultSet rs = statement.executeQuery("SELECT showname FROM shows");
             String showname = "";
             String extension = "";
             while(rs.next())
@@ -401,8 +397,11 @@ public class App {
 
     // Method to fill a DataHelper with the information stored in database
     private void fillDBInfo(DataHelper show) throws SQLException {
-        ResultSet rs = statement.executeQuery("select * from shows where showname = "
-                + "'" + show.getShortName().replaceAll("'", "''") + "." + show.getExtension().replaceAll("'", "''") + "'");
+        String selectShow = "SELECT * FROM shows WHERE showname = ?";
+        preparedStatement = connection.prepareStatement(selectShow);
+        preparedStatement.setString(1, show.getShortName() + "." + show.getExtension());
+        ResultSet rs = preparedStatement.executeQuery();
+
         show.setDescription(rs.getString("description"));
         show.setCategory(rs.getString("category_id"));
         show.setType(rs.getString("type_id"));
@@ -496,20 +495,24 @@ public class App {
         int stream = show.isStreamOptimized() ? 1 : 0;
         int sd = show.isSdContent() ? 1 : 0;
 
-        statement.executeUpdate("UPDATE shows SET description=" + "'" + descriptionTextArea.getText().replaceAll("'", "''") + "',"
-                + "category_id=" + "'" + categoryComboBox.getSelectedItem().toString() + "',"
-                + "type_id=" + "'" + typeComboBox.getSelectedItem().toString() + "',"
-                + "resolution_id=" + "'" + resolutionComboBox.getSelectedItem().toString() + "',"
-                + "tmdb=" + Integer.parseInt(show.getTmdbID()) + ","
-                + "imdb=" + Integer.parseInt(show.getImdbID()) + ","
-                + "tvdb=" + Integer.parseInt(show.getTvdbID()) + ","
-                + "mal=" + Integer.parseInt(show.getMalID()) + ","
-                + "anonymous=" + anonymous + ","
-                + "stream=" + stream + ","
-                + "sd=" + sd + ","
-                + "name=" + "'" + titleTextField.getText().replaceAll("'", "''") + "'"
-
-                + "WHERE showname=" + "'" + show.getShortName().replaceAll("'", "''") + "." + show.getExtension().replaceAll("'", "''") + "'");
+        String updateShow = "UPDATE shows SET description = ?, category_id = ?, type_id = ?, resolution_id = ?, " +
+                "tmdb = ?, imdb = ?, tvdb = ?, mal = ?, anonymous = ?, stream = ?, sd = ?, name = ? " +
+                "WHERE showname = ?;";
+        preparedStatement = connection.prepareStatement(updateShow);
+        preparedStatement.setString(1, descriptionTextArea.getText());
+        preparedStatement.setString(2, categoryComboBox.getSelectedItem().toString());
+        preparedStatement.setString(3, typeComboBox.getSelectedItem().toString());
+        preparedStatement.setString(4, resolutionComboBox.getSelectedItem().toString());
+        preparedStatement.setInt(5, Integer.parseInt(show.getTmdbID()));
+        preparedStatement.setInt(6, Integer.parseInt(show.getImdbID()));
+        preparedStatement.setInt(7, Integer.parseInt(show.getTvdbID()));
+        preparedStatement.setInt(8, Integer.parseInt(show.getMalID()));
+        preparedStatement.setInt(9, anonymous);
+        preparedStatement.setInt(10, stream);
+        preparedStatement.setInt(11, sd);
+        preparedStatement.setString(12, titleTextField.getText());
+        preparedStatement.setString(13, show.getShortName() + "." + show.getExtension());
+        preparedStatement.executeUpdate();
     }
 
     // Method to save the information of previously selected show
@@ -540,7 +543,7 @@ public class App {
 
     // Method to get the source folder (the folder which is specified in Settings) path from database
     private String getSourceFolderPathFromDB() throws SQLException {
-        ResultSet rs = statement.executeQuery("select path from settings where id=0");
+        ResultSet rs = statement.executeQuery("SELECT path FROM settings WHERE id = 0");
         return rs.getString("path");
     }
 
