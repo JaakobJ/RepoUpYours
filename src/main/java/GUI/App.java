@@ -66,7 +66,6 @@ public class App {
 
     private Connection connection = null;
     private Statement statement = null;
-    private PreparedStatement preparedStatement = null;
 
     // To remember which show is currently selected
     private DataHelper currentlySelectedShow = null;
@@ -398,7 +397,7 @@ public class App {
     // Method to fill a DataHelper with the information stored in database
     private void fillDBInfo(DataHelper show) throws SQLException {
         String selectShow = "SELECT * FROM shows WHERE showname = ?";
-        preparedStatement = connection.prepareStatement(selectShow);
+        PreparedStatement preparedStatement = connection.prepareStatement(selectShow);
         preparedStatement.setString(1, show.getShortName() + "." + show.getExtension());
         ResultSet rs = preparedStatement.executeQuery();
 
@@ -498,7 +497,7 @@ public class App {
         String updateShow = "UPDATE shows SET description = ?, category_id = ?, type_id = ?, resolution_id = ?, " +
                 "tmdb = ?, imdb = ?, tvdb = ?, mal = ?, anonymous = ?, stream = ?, sd = ?, name = ? " +
                 "WHERE showname = ?;";
-        preparedStatement = connection.prepareStatement(updateShow);
+        PreparedStatement preparedStatement = connection.prepareStatement(updateShow);
         preparedStatement.setString(1, descriptionTextArea.getText());
         preparedStatement.setString(2, categoryComboBox.getSelectedItem().toString());
         preparedStatement.setString(3, typeComboBox.getSelectedItem().toString());
